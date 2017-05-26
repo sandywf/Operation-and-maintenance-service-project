@@ -1,0 +1,13 @@
+.s-item:nth-child(2){margin: 15px 0;}
+.zoom{margin-left:5px;}
+.s-item>div{display: inline-block;}
+.s-item lable{width: 80px;text-align: right;display: inline-block;}
+#root .ant-calendar-picker-input{width:290px;line-height: 23px;}
+.zoom>span{padding: 6px 15px;border-radius: 5px;}
+.parent{background-color: rgba(243, 243, 243, 0.43);border: 1px solid #ececec;}
+.parent .ant-tabs-content{background: #fff;box-shadow: 0 0 10px #e3e3e3;padding-top: 20px;}
+
+.zoom span.active{background-color: #4e8fe7;
+    color: #fff;}
+.noneDms{opacity: 0;}
+.showDms{opacity: 1;}

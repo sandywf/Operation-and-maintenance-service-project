@@ -1,0 +1,166 @@
+
+
+
+.zweb{
+background:url(../../../public/_module/images/yw-bg.png) no-repeat center top #193760;
+
+}
+.linear{
+	border:1px solid red;
+}
+.container{
+	width:1200px;
+	margin:0 auto;
+	font-family: "微软雅黑",Microsoft Yahei;
+	font-size: 12px;
+	color:#666;
+	
+}
+// LOGO 
+.ms-logo{
+	height:290px;
+	margin:0 0 58px 0;
+	border:1px solid transparent;
+	background:url(../../../public/_module/images/yw-logo.png) no-repeat center bottom;
+}
+.ms-circle{
+	width:104px;
+	height:104px;
+	margin:116px auto 0 auto;
+	border-radius:104px;
+	background:red;
+	text-align: center;
+	line-height: 104px;
+	font-size:30px;
+	color:#fff;
+}
+// login 
+.ms-login{
+	width:334px;
+	margin:0 auto;
+}
+.ms-login label{
+	display:block;
+	position:relative;
+	width:100%;
+    border-bottom: 1px solid #a6afb6;
+}
+.h100{
+	height:100px;
+}
+.ms-login i{
+	position:absolute;
+	top:18px;
+	left:12px;
+	width:30px;
+	height:30px;
+	font-size: 22px;
+	color:#d6d6d6;
+}
+.ms-error{
+	display:block;
+	margin-top:10px;
+	text-align:center;
+	font-size:16px;
+	color:#ff5757;
+}
+.ms-login input,.ms-login button{
+	display:block;
+	width:332px;
+	margin:0 auto;
+	text-align: center;
+	outline: none;
+}
+.ms-login input{
+	width: 235px;
+	height:64px;
+	border:none;
+	font-size:16px;
+	color:#d6d6d6;
+	background:none;
+}
+
+.ms-login input:focus + i{
+	color:#16c7c7;
+}
+.ms-login button{
+	height:50px;
+	margin-top:60px;
+	border:1px solid #12a8a8;
+	font-size:22px;
+	color:#a6cbcb;
+	cursor:pointer;
+	background:#12a8a8;
+}
+.ms-login button:hover{
+	border:1px solid #16c7c7;
+	color:#fff;
+	background:#16c7c7;
+}
+:global(.focus){
+	background:rgba(152,162,175,0.25);
+}
+:global(.focus) i,:global(.focus) input{color:#16c7c7;}
+:global(.atv_icon){color:#16c7c7}
+// 登录下列表 
+.ms-nav{
+	width:648px;
+	height:218px;
+	margin:92px auto 20px auto;
+	overflow:hidden;
+}
+.ms-nav li{
+	width:132px;
+	margin:0 15px;
+	padding:20px 17px 0 17px;
+	float:left;
+	border:1px solid transparent;
+	border-radius: 4px;
+}
+.ms-nav i{
+	display:block;
+	text-align:center;
+	font-size:45px;
+	color:#4d77b1;
+}
+.ms-nav li h3{
+	margin:10px 0 30px 0;
+	text-align: center;
+	font-weight:100;
+	color:#4d77b1;
+}
+.ms-nav li p{
+	display:none;
+	line-height:20px;
+	color:#6eebeb;
+}
+.ms-nav li:hover{
+	height:100%;
+	border:1px solid #026464;
+}
+.ms-nav li:hover i{
+	color:#00eaea;
+}
+.ms-nav li:hover h3{
+	color:#fff;
+}
+.ms-nav li:hover p{
+	display: block;
+}
+// 页脚 
+.ms-footer{
+	padding-bottom:20px;
+	text-align:center;
+	color:#657488;
+}
+input:-webkit-autofill {
+   -webkit-text-fill-color: #ededed !important;
+   -webkit-box-shadow: 0 0 0px 1000px transparent  inset !important;
+   background-color:transparent;
+   background-image: none;
+   transition: background-color 50000s ease-in-out 0s;
+}
+
+input{
+   background-color:transparent !important;
+} 

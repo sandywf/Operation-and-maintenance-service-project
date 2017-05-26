@@ -1,0 +1,61 @@
+body{
+	font-family:微软雅黑;
+	background:#fff !important;
+}
+.container{
+	width:90%;
+}
+//表格样式
+.ms-table{
+	border:1px solid red;
+	padding:10px;
+}
+.ms-caption{
+	margin-bottom:12px;
+	text-indent:10px;
+}
+.ms-caption span{
+	padding:0 2px;
+	color:#00a1d9;
+}
+//排序样式
+
+.ms-table .ant-table-thead .ant-table-column-sorter{
+	border:1px solid red !important;
+}
+
+
+.ms-tab .ant-table-body{
+	width:100%;
+	height:540px;
+	border-collapse:collapse;
+	border:1px solid #c4c4c4;
+	text-align:center;
+	color:#444;
+}
+.ant-table-tbody>tr:hover{
+	background:#daefef;
+}
+.ant-table-thead>tr>th,.ant-table-tbody>tr>td{
+	padding:0;
+	text-align:center;
+}
+
+.ant-table-tbody>tr>td {
+	height:40px;
+    border-right:1px solid #e0e0e0;
+    border-bottom:1px solid #e0e0e0;
+}
+.ant-table-tbody span a{
+	color:#0e58d2;
+}
+
+//分頁
+.ant-pagination.ant-table-pagination{
+	width:500px;
+	border:1px solid red;
+	text-align:center;
+	float:none;
+	margin:20px auto;
+}
+

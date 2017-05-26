@@ -1,0 +1,115 @@
+import React from 'react';
+import ReactEcharts from 'echarts-for-react';
+const Down = React.createClass({
+      propTypes: {},
+      timeTicket: null,
+    getInitialState: function() {
+        return {option: this.getOption()};
+    },
+    fetchNewDate: function() {
+        let axisData = (new Date()).toLocaleString().replace(/^\D*/,'');
+        let option = this.state.option;
+        let data0 = option.series[0].data;
+        data0.shift();
+        data0.push(Math.round(Math.random() * 1000));
+        option.xAxis[0].data.shift();
+        option.xAxis[0].data.push(axisData);
+        this.setState({option: option});
+    },
+    componentDidMount: function() {
+        if (this.timeTicket) {
+            clearInterval(this.timeTicket);
+        }
+        this.timeTicket = setInterval(this.fetchNewDate, 1000);
+    },
+    componentWillUnmount: function() {
+        if (this.timeTicket) {
+            clearInterval(this.timeTicket);
+        }
+    },
+    getOption: function() {
+        const option = {
+            title: {
+                text: '下行流量',
+               x: "center"
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                x: "left",
+                data:[{name:'下行流量'}]
+            },
+            toolbox: {
+                show: true,
+                feature: {
+                    dataView: {readOnly: false},
+                    restore: {},
+                    saveAsImage: {}
+                }
+            },
+          
+            xAxis: [
+                {
+                    type: 'category',
+                    boundaryGap: true,
+                    data: (function (){
+                        let now = new Date();
+                        let res = [];
+                        let len = 50;
+                        while (len--) {
+                            res.unshift(now.toLocaleString().replace(/^\D*/,''));
+                            now = new Date(now - 432000000);
+                            /*console.log(res.unshift(month.toString()+"/"+ day.toString()+ " "+hour.toString()+":"+mm.toString()));*/
+                        }
+                        return res;
+                    })()
+                }
+              
+            ],
+            yAxis: [
+                {
+                    type: 'value',
+                    scale: true,
+                    name: '下行流量(KB/S)',
+                    min: 0,
+                    boundaryGap: [0.2, 0.2]
+                }
+             
+            ],
+            series: [
+                {
+                    name:'下行流量',
+                    type:'line',
+                    animationEasing: 'elasticOut',
+                    itemStyle:{normal : {lineStyle:{color:'#1fc4ce'}}},  
+                    animationDelay: function (idx) {
+                        return idx * 10;
+                    },
+                    animationDelayUpdate: function (idx) {
+                        return idx * 10;
+                    },
+                    data:(function (){
+                        let res = [];
+                        let len = 0;
+                        while (len < 50) {
+                            res.push((Math.random()*10 + 5).toFixed(1) - 0);
+                            len++;
+                        }
+                        return res;
+                    })()
+                }
+            ]
+        };
+
+        return option;
+    },
+    render: function() {
+        return (            
+            <ReactEcharts ref='echarts_react' option={this.state.option} style={{height: 300}} />
+        );
+    }
+});
+
+
+export default Down;

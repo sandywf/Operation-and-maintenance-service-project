@@ -1,0 +1,22 @@
+@import 'base';
+@import '~normalize.css/normalize';
+
+body{
+  font-family: "Helvetica Neue", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Hiragino Kaku Gothic Pro", Meiryo, "Malgun Gothic", sans-serif;
+  color: #444;
+  font-size: 14px;
+  line-height:1;
+}
+
+
+
+a{
+  color:#07c;
+  text-decoration: none;
+  &:hover{
+    color:#00d6d6;
+    text-decoration: underline;
+  }
+}
+
+
