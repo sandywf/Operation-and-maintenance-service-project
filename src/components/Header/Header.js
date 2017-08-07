@@ -2,6 +2,7 @@ import React from 'react'
 import { IndexLink, Link } from 'react-router'
 /*import '../../../node_modules/antd/dist/antd.css'*/
 import '../../public/_module/css/base.css'
+import '../../public/_module/js/common.js'
 import './Header.css'
 import { Tabs } from 'antd'
 import Logo from '../../public/_module/images/logo.png'

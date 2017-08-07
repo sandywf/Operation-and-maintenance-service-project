@@ -1,3 +1,4 @@
+
 const listData = {
     "data": [{
         "key": 1,
@@ -77,6 +78,8 @@ export const DMC_LIST_TYPE = 'DMC_LIST_TYPE'
 // TEST
 export const DMC_AREA_TYPE = 'DMC_AREA_TYPE'
 
+// SEARCH
+export const SEARCH_FILTER = 'SEARCH_FILTER'
 // ------------------------------------
 // Actions
 // ------------------------------------
@@ -95,13 +98,13 @@ export const DMC_AREA_TYPE = 'DMC_AREA_TYPE'
 export const getDMCData = () => {
     return (dispatch, getState) => {
 
-        return fetch("https://api.github.com/users/suncn").then(response => {
+        /*return fetch("/api/usersList").then(response => {*/
             dispatch({
                 type: DMC_LIST_TYPE,
                 payload: listData
             })
 
-        })
+        /*})*/
 
         /*
 		return new Promise((resolve) => {
@@ -124,11 +127,21 @@ export const getTestData = () =>{
 
     }
 }
+//SEARCH
+export const getFilter = (filter) =>{
+    return (dispatch, getState) => {
+    dispatch({
+                type: SEARCH_FILTER,
+                filter
+            });
+
+    }
+}
 
 export const actions = {
     getDMCData,
-	getTestData
-
+	getTestData,
+    getFilter
 }
 
 // ------------------------------------
@@ -143,6 +156,9 @@ const ACTION_HANDLERS = {
         state = Object.assign(state, action.payload)
         return Object.create(state)
     },
+    [SEARCH_FILTER]:(state, action)=>{
+        return action.filter
+    }
 }
 
 // ------------------------------------

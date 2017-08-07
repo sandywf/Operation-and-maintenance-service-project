@@ -84,7 +84,7 @@ export const doDelete = ({record,dataSource})=>{
     let list = data;
     return {
         type:DO_DELETE,
-        payload:list 
+        list 
     }
 }
 

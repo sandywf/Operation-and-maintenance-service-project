@@ -8,6 +8,7 @@ const config = require('../config')
 const app = express()
 const paths = config.utils_paths
 
+
 // ------------------------------------
 // Apply Webpack HMR Middleware
 // ------------------------------------
@@ -31,11 +32,7 @@ if (config.env === 'development') {
   // of development since this directory will be copied into ~/dist
   // when the application is compiled.
   app.use(express.static(paths.client('static')))
-// 具体接口设置
-/*app.get('/api/test', function(req, res) {
-  res.send({ code: 200, data: 'your data' });
-  res.end()
-})*/
+  
   app.use('*', function (req, res, next) {
     const filename = path.join(compiler.outputPath, 'index.html')
     compiler.outputFileSystem.readFile(filename, (err, result) => {

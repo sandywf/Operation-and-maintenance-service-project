@@ -57,7 +57,16 @@ webpackConfig.plugins = [
     minify: {
       collapseWhitespace: true
     }
-  })
+  }),
+  new webpack.ProvidePlugin({
+
+        $:"jquery",
+
+        jQuery:"jquery",
+
+        "window.jQuery":"jquery"
+
+      })
 ]
 if (__DEV__) {
   debug('Enable plugins for live development (HMR, NoErrors).')

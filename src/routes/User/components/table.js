@@ -4,9 +4,9 @@ import {Table, Input, Icon, Button, Popconfirm ,Modal,Form,Col, Checkbox } from 
 const FormItem = Form.Item;
 const CheckboxGroup = Checkbox.Group;
 let  data = [];
-const Tableuser = React.createClass({
-  
-render(){
+/*const Tableuser = React.createClass({*/
+class Tableuser extends React.Component {
+  render(){
 /*   const { doHeader } = this.props;
     if(doHeader&& doHeader.list){//填充数据
         for(let i=0;i<doHeader.list.length;i++){
@@ -65,7 +65,7 @@ render(){
       
     );
   }
-});
+};
 export default Tableuser;
 
 

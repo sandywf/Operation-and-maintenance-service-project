@@ -1,6 +1,7 @@
 import React from 'react';
 import {DatePicker,Button,Tabs, Select,Icon} from 'antd';
-
+import Search from './Search';
+import Topone from '../../../components/common/TopOne';
 import UP from './up_flow';
 import DOWN from './down_flow';
 import PACKET from './packet';
@@ -9,50 +10,21 @@ import './elapse.css';
 const { RangePicker } = DatePicker;
 const Option = Select.Option;
 const TabPane = Tabs.TabPane;
-const zoom = [{
-    key:'1',
-    name: '50m',
-    data: '50m',
-  },{
-    key:'2',
-    name: '30m',
-    data: '30m',
-  },{
-    key:'3',
-    name: '1h',
-    data: '1h',
-  },{
-    key:'4',
-    name: '1d',
-    data: '1d',
-  },{
-    key:'5',
-    name: '所有',
-    data: '所有',
-}];
-function onChange(date, dateString) {
-  console.log(date, dateString);
-}
-const Charts= React.createClass({
-    getInitialState() {
-      return {
-        show:false
-      }
-    },
-  dmcHandle(value){
-      if(value!==''){
-        this.setState({show:true})
-      }else{
-        this.setState({show:false})
-      }
-    },
-    changeTime(key) { 
-      this.setState({active: key});
-    },
-    render: function() {
+
+
+class Charts extends React.Component {
+    state = {
+        titleName:'图形',
+    };
+    valSearch =(searchContent) =>{
+      this.filter = searchContent;
+      this.handleChange();
+    }
+    render() {
       return (
         <div className='elapse'>
-            <h4 className="ms-overall">
+           {/* 
+           <h4 className="ms-overall">
               <strong>图形</strong> 
               <i className="iconfont icon-Full-screen"></i> 
               <i>全屏</i>
@@ -84,7 +56,9 @@ const Charts= React.createClass({
               <lable>时间段：</lable>
               <div><RangePicker onChange={onChange} /></div>
             </div>
-          </div>
+          </div>*/}
+            <Topone title={this.state.titleName} />
+            <Search valSearch={this.valSearch.bind(this)} />
             <div className='parent'>
               <Tabs tabPosition="left">
                   <TabPane tab="上行流量" key="1"><UP /></TabPane>
@@ -96,5 +70,5 @@ const Charts= React.createClass({
         </div>
       );
     }
-});
+};
 export default Charts;

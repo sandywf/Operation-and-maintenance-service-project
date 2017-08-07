@@ -8,7 +8,8 @@ const formItemLayout = {
   wrapperCol: {span: 14}
 };
 
-const Umodal = React.createClass({
+/*const Umodal = React.createClass({*/
+class Umodal extends React.Component {
    handleOk(e) {
       e.preventDefault();
       this.props.form.validateFields((errors) => {
@@ -24,7 +25,7 @@ const Umodal = React.createClass({
           }
           this.setState({isVisible:false});
       });
-  },
+  }
 
  render(){
     const options = [
@@ -133,7 +134,7 @@ const Umodal = React.createClass({
     </Modal>
     );
   }
-});
+};
 Umodal.propTypes = {
   data: PropTypes.array.isRequired,
 }
