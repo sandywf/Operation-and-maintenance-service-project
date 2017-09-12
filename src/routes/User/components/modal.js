@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import ReactDOM from 'react-dom';
 import { Form, Input, Col,Modal,Checkbox,Button, Row} from 'antd';
 const FormItem = Form.Item;
 const CheckboxGroup = Checkbox.Group;
@@ -7,35 +7,40 @@ const formItemLayout = {
   labelCol: {span: 6},
   wrapperCol: {span: 14}
 };
-
-/*const Umodal = React.createClass({*/
+const options = [
+  { label: '用户列表', value: '1' },
+  { label: '流媒体服务', value: '2'}
+];
 class Umodal extends React.Component {
-   handleOk(e) {
+  constructor(props) {
+    super(props);
+    this.state = { pwd: '',userDiv :''}
+  }
+  handleOk = (e,userId) => {
       e.preventDefault();
       this.props.form.validateFields((errors) => {
           if (errors) {return false;}
           let current = (this.props.form.getFieldsValue());
            const data = this.props.data;
           if (this.props.current.modalType == "add") {
-               this.props.doAdd({current, data});
+               this.props.doAdd({current,data});
           } else if (this.props.current.modalType == "modify") {
-              current.key = this.props.current.key;
-              this.props.doModify({current, data});
-              this.setState({isVisible:false});
+              this.props.doModify({current,data,userId});
           }
-          this.setState({isVisible:false});
+          this.props.show();
+         // this.setState({pwd:'666666'});
       });
   }
-
+  randomPwd = () =>{
+    let pwdNum = '';
+    for (let i=0;i<6;i++) pwdNum+=Math.floor(Math.random()*10);
+    this.setState({pwd:pwdNum});
+  }
  render(){
-    const options = [
-      { label: '流媒体服务', value: 'server' },
-      { label: '用户列表', value: 'user' }
-    ];
     const { getFieldDecorator } = this.props.form;
   return (
-    <Modal className="user-md"  title={this.props.title} data= {this.props.data} current= {this.props.current} visible={this.props.visible} onOk={this.handleOk}  onCancel={this.props.del}>
-      <Form layout="horizontal"  id="user-modal">
+    this.props.setVisible && <Modal className="user-md" visible={this.props.setVisible} title={this.props.title} data= {this.props.data} current= {this.props.current} onOk={(e)=>this.handleOk(e,this.props.userId)}  onCancel={this.props.del}>
+      <Form layout="horizontal"  id="user-modal" onSubmit={this.handleOk}>
         <FormItem label='用户名：' hasFeedback {...formItemLayout}>
           {getFieldDecorator('username',{
             initialValue:this.props.current.username || "",
@@ -59,7 +64,7 @@ class Umodal extends React.Component {
           <Row gutter={8}>
             <Col span={12}>
              {getFieldDecorator('password', {
-                initialValue:this.props.current.password || "",
+                initialValue:this.state.pwd || "666666",
                 rules: [
                   {
                     required: true,
@@ -77,13 +82,13 @@ class Umodal extends React.Component {
              })(<Input size="large" />)}
              </Col>
             <Col span={12}>
-              <Button size="large" onClick={this.random}>随机密码</Button>
+              <Button size="large" onClick={this.randomPwd}>随机密码</Button>
             </Col>
           </Row>
         </FormItem>
         <FormItem label='姓名：' hasFeedback {...formItemLayout}>
-         {getFieldDecorator('name', {
-            initialValue:this.props.current.name || "",
+         {getFieldDecorator('realname', {
+            initialValue:this.props.current.realname || "",
             rules: [
               {
                 required: true,
@@ -105,8 +110,8 @@ class Umodal extends React.Component {
           )}
         </FormItem>
         <FormItem label='手机：' hasFeedback {...formItemLayout}>
-           {getFieldDecorator('phonenum', {
-            initialValue:this.props.current.phonenum || "",
+           {getFieldDecorator('tel', {
+            initialValue:this.props.current.tel || "",
             rules: [
               {
                 required: true,
@@ -120,12 +125,13 @@ class Umodal extends React.Component {
           })(<Input />)}
         </FormItem>
         <FormItem label='功能：' hasFeedback {...formItemLayout}>
-          {getFieldDecorator('func', {
-           initialValue:this.props.current.func || "",
+          {getFieldDecorator('functions', {
+           initialValue:this.props.current.functions || [],
             rules: [
               {
                 required: true,
-                message: '不能为空'
+                message: '不能为空',
+                type: 'array'
               }
             ]
           })(<CheckboxGroup options={options} />)}
@@ -135,7 +141,4 @@ class Umodal extends React.Component {
     );
   }
 };
-Umodal.propTypes = {
-  data: PropTypes.array.isRequired,
-}
 export default Form.create()(Umodal);

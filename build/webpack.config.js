@@ -4,6 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const config = require('../config')
 const debug = require('debug')('app:webpack:config')
+const path = require('path');
 
 const paths = config.utils_paths
 const __DEV__ = config.globals.__DEV__
@@ -40,9 +41,10 @@ webpackConfig.output = {
   filename: `[name].[${config.compiler_hash_type}].js`,
   chunkFilename: '[chunkhash].js',
   path: paths.dist(),
-  publicPath: config.compiler_public_path
+  publicPath: '../dist/'
 }
-
+// publicPath: config.compiler_public_path
+console.log('config.compiler_public_path', config.compiler_public_path);
 // ------------------------------------
 // Plugins
 // ------------------------------------
@@ -50,7 +52,7 @@ webpackConfig.plugins = [
   new webpack.DefinePlugin(config.globals),
   new HtmlWebpackPlugin({
     template: paths.client('index.html'),
-    hash: false,
+    hash: true,
     favicon: paths.client('static/favicon.ico'),
     filename: 'index.html',
     inject: 'body',
@@ -204,5 +206,4 @@ if (!__DEV__) {
     })
   )
 }
-
 module.exports = webpackConfig

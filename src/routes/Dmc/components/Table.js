@@ -1,89 +1,45 @@
 import React from 'react';
-import { ReactInterval } from 'react-interval';
-import { Table, Input, Button, Select } from 'antd';
-import Search from './Search';
-import Topone from '../../../components/common/TopOne';
-import Timebar from '../../../components/common/Time';
-import Modaldia from './Modal';
+import {Table,Form} from 'antd';
+let  dataSource = [];
+const FormItem = Form.Item;
 const { Column, ColumnGroup } = Table;
-const Option = Select.Option;
-
-class Counter extends React.Component {
+class DmcTable extends React.Component {
     state = {
-        filteredInfo: '',
-        sortedInfo: '',
-        data: this.props.data,
-        dataSource: this.props.data2,
-        pagination: {},
+        filteredInfo: null,
+        sortedInfo: null,
         loading: false,
         isVisible: false,
-        key: 1,
-        titleName: 'DMC',
+        curPage:1,  /*翻页查询*/
+        pageSize:1,  /*分页查询*/
     }
     constructor(props) {
         super(props);
         this.filter = '';
-        this.timeoutId = '';
     }
-    componentDidMount() {
-        // 用事件请求测试数据
-        if (!this.props.data || !this.props.data.listData) {
-            // 请求列表数据
-            this.props.getDMCData();
-        }
-        /*this.timer = setInterval(function () {
-           
-        }.bind(this),this.state.time); */
-    }
+    /*翻页事件*/
+onShowSizeChange(current, pageSize){
+    this.props.searchGroupManage({curPage:current ,pageSize: pageSize});
+}
 
-    /*    componentWillUnmount() {
-          this.timer && clearTimeout(this.timer);
-        }*/
-    componentWillReceiveProps(props) {
-        if (props.data.length != 0) {
-            this.setState({ data: props.data });
-            this.setState({ dataSource: props.data2 });
-        }
-    }
-    handleChange = (pagination, filters, sorter) => {
-        let _this = this;
-        this.setState({
-            filters: this.filter,
-            pagination: this.pagination,
-            sorter: this.sorter,
-        });
-        this.props.getDMCData({pagination,filters,sorter});
-        
-    }
-    valSearch = (searchContent) => {
-        this.filter = searchContent;
-        this.handleChange();
-    }
-    modalCancel = (e) => {
-        this.setState({ isVisible: false });
-    }
+/*分页事件*/
+onChange(current){            
+　　　　this.props.searchGroupManage({curPage:current,pageSize:this.state.pageSize});
+}
     showModal = () => {
         let newKey = parseInt(100 * Math.random());
         this.setState({ key: newKey });
         this.setState({ isVisible: true });
     }
-    onShowSizeChange(current, pageSize){
-        //this.props.searchGroupManage({page:current ,size: pageSize});
-        console.log(current);    
+    handleChange = (pagination, filters, sorter) => {
+        this.props.getDMCData({pagination,filters,sorter});
     }
-
-/*分页事件*/
-onChange(current){     
-    console.log(current);       
-　　　　//this.props.searchGroupManage({page:current,size:this.state.pageSize});
-}
-    render() {
+    render(){
         let { sortedInfo, filteredInfo } = this.state;
         sortedInfo = sortedInfo || {};
         filteredInfo = filteredInfo || {};
+        const { dataSource ,onChange } = this.props;
         const pagination = {
-            total: 1,/*这里是所有的数据*/
-           // showSizeChanger: true,
+            showSizeChanger: true,
             onShowSizeChange:this.onShowSizeChange.bind(this),
             onChange:this.onChange.bind(this)
         };
@@ -178,14 +134,10 @@ onChange(current){
             sorter: true
         }];
         return (
-            <div id="dmc">
-                <Topone title={this.state.titleName} />
-                <Search valSearch={this.valSearch.bind(this)} />
-                <Timebar itemNum={this.state.data.length} />
-                <Table columns={columns} rowKey={record => record.dmcTag} dataSource={this.state.data} onChange={this.handleChange} pagination={pagination} />
-                <Modaldia newKey={this.state.key} visible={this.state.isVisible} modalSource={this.state.dataSource} del={() => this.modalCancel()} />
-            </div>
+            <Table  dataSource={dataSource} columns={columns} rowKey={record => record.dmcTag} onChange={this.props.subFilter} pagination={pagination} /> 
         );
     }
 };
-export default Counter;
+export default DmcTable;
+
+

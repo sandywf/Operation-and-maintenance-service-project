@@ -8,7 +8,6 @@ const config = require('../config')
 const app = express()
 const paths = config.utils_paths
 
-
 // ------------------------------------
 // Apply Webpack HMR Middleware
 // ------------------------------------

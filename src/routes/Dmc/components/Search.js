@@ -29,14 +29,14 @@ class Search extends React.Component {
 			<Form layout="inline" onSubmit={this.handleSearch}>
 				<div className="table-search">
          			<FormItem label="DMC名称">  
-                        {getFieldDecorator('name')(<Input  type="text" placeholder="" />)}
+                        {getFieldDecorator('dmcName')(<Input  type="text" placeholder="" />)}
          			</FormItem>
          			<FormItem label="活跃状态">
-         			    {getFieldDecorator('active')(
+         			    {getFieldDecorator('activeStatus')(
          				   <Select>
          				       <Option value=""></Option>
-         				       <Option value="活跃">活跃</Option>
-         				       <Option value="不活跃">不活跃</Option>
+         				       <Option value="Y">活跃</Option>
+         				       <Option value="N">不活跃</Option>
          				   </Select>
          				)}
          			</FormItem>

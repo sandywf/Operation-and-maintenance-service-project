@@ -1,15 +1,16 @@
-import { connect } from 'react-redux'
-import Search from "../components/Search"
-import { actions } from '../modules/counter'
-const mapStateToProps = (state,ownProps) =>{
-    
-}
-const mapDispatchToprops = (dispatch,ownProps) =>{
-    return{
-        
-    }
-}
-const FilterSearch = connect(
-    mapStateToProps,
-    mapDispatchToprops
-)(Search)
+// import { connect } from 'react-redux'
+// import { getFilter } from '../modules/counter'
+// import Search from "../components/Search"
+
+// const mapStateToProps = (state) => ({
+//   search:state.dmc
+// })
+// const mapDispatchToprops = {
+//    getFilter
+// }
+// const FilterSearch = connect(
+//     mapStateToProps,
+//     mapDispatchToprops
+// )(Search)
+
+// export default FilterSearch

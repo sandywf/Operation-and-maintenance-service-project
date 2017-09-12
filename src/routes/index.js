@@ -21,11 +21,24 @@ import 'whatwg-fetch';
 import 'es6-promise/dist/es6-promise.min.js';
 import 'fetch-ie8/fetch.js';
 import  'babel-plugin-import';
-
+import utils from '../utils/utils';
 /*console.log(document.body.clientWidth);
 if(document.body.clientWidth<=1360){
     document.body.overflowX="scroll"; 
 }*/
+// function requireAuth(nextState,replace,next) {
+//     if(utils.wToken) {
+//         replace({
+//             pathname: '/',
+//             state: {
+//                 nextPathname: nextState.location.pathname
+//             }
+//         })
+//     }else{
+//         replace("/login")//如果token信息为空就直接到登录页面
+//         next();
+//     }
+// }
 function requireAuth(nextState, replace) {
     //  if (!auth.loggedIn()) {
 	/**

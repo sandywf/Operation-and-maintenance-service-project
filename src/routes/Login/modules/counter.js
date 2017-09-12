@@ -1,54 +1,60 @@
+import {browserHistory} from 'react-router';
+import HTTPUtil from '../../../utils/request';
+import utils from '../../../utils/utils';
 // ------------------------------------
 // Constants
 // ------------------------------------
-export const COUNTER_INCREMENT = 'COUNTER_INCREMENT'
-export const COUNTER_DOUBLE_ASYNC = 'COUNTER_DOUBLE_ASYNC'
+export const LOGIN = 'LOGIN'
 
 // ------------------------------------
 // Actions
 // ------------------------------------
-export function increment (value = 1) {
-  return {
-    type    : COUNTER_INCREMENT,
-    payload : value
-  }
-}
-
-/*  This is a thunk, meaning it is a function that immediately
- returns a function for lazy evaluation. It is incredibly useful for
- creating async actions, especially when combined with redux-thunk! */
-
-export const doubleAsync = () => {
+export const login = ({username,password})=>{
+  let formData = new FormData();  
+  formData.append("username",username); 
+  formData.append("password",password); 
   return (dispatch, getState) => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        dispatch({
-          type    : COUNTER_DOUBLE_ASYNC,
-          payload : getState().counter
-        })
-        resolve()
-      }, 200)
-    })
+      return HTTPUtil.post(utils.host+'/user/login',formData).then((json) => {  
+      //处理 请求success  
+        if(json.status === '000000000' ){  
+              //我们假设业务定义code为0时，数据正常  
+              //sessionStorage.setItem('token',json.result.token)
+              utils.wToken = json.result.token;
+              //global.wToken = json.result.token;
+              dispatch({
+                type:LOGIN,
+                json
+              })
+              browserHistory.push('/')  
+          }else{  
+              //处理自定义异常  
+              Modal.error({content:json.message});
+          }  
+    },(json)=>{
+      //TODO 处理请求fail  
+          
+    })  
   }
 }
-
 export const actions = {
-  increment,
-  doubleAsync
+  login,
 }
 
 // ------------------------------------
 // Action Handlers
 // ------------------------------------
 const ACTION_HANDLERS = {
-  [COUNTER_INCREMENT]    : (state, action) => state + action.payload,
-  [COUNTER_DOUBLE_ASYNC] : (state, action) => state * 2
+  [LOGIN]    : (state, action) => {
+    return {data:action.json.message}
+  }
 }
 
 // ------------------------------------
 // Reducer
 // ------------------------------------
-const initialState = 0
+const initialState = {
+  data: ''
+}
 export default function counterReducer (state = initialState, action) {
   const handler = ACTION_HANDLERS[action.type]
 

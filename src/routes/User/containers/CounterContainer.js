@@ -7,7 +7,8 @@ import Counter from '../components/Counter'
 const mapDispatchToProps = actions;
 const mapStateToProps = (state) => ({
     data: state.user.data,
-    current: state.user.current
+    current: state.user.current,
+    isVisible:state.user.isVisible
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Counter)

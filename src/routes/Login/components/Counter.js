@@ -1,6 +1,7 @@
 import React from 'react';
-import {withRouter} from 'react-router';
-import { Form, Icon, Input, Button, Checkbox } from 'antd';
+import {withRouter,browserHistory} from 'react-router';
+import { Form, Icon, Input, Button, Checkbox ,Modal} from 'antd';
+
 const FormItem = Form.Item;
 //样式文件
 import classes from './msLogin.scss';
@@ -17,21 +18,10 @@ const Login = withRouter(
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
           if (!err) {
-            fetch('https://randomuser.me/api', values)
-              .then((res) => {
-                if (res) {
-                  /*message.info('登录成功');*/
-                  /*this.context.router.push('/');*/
-                } else {
-                  /*message.info('登录失败，账号或密码错误');*/
-                }
-              });
+            let username = values.username;
+            let password = values.password;
+            this.props.login({username,password});
           }
-       if (location.state && location.state.nextPathname) {
-                this.props.router.replace(location.state.nextPathname);
-            } else {
-                this.props.router.replace('/');
-            };
         });
       },
       render: function() {
@@ -45,7 +35,7 @@ const Login = withRouter(
                 </div>     
                 <div className={classes["ms-login"]}>
                   <FormItem>
-                    {getFieldDecorator('userName', {
+                    {getFieldDecorator('username', {
                       rules: [
                           {
                             required: true,

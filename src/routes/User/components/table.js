@@ -1,48 +1,42 @@
 import React from 'react';
 import {Table, Input, Icon, Button, Popconfirm ,Modal,Form,Col, Checkbox } from 'antd';
-
+let  dataSource = [];
 const FormItem = Form.Item;
 const CheckboxGroup = Checkbox.Group;
-let  data = [];
-/*const Tableuser = React.createClass({*/
+
 class Tableuser extends React.Component {
+  constructor(props) {
+    super(props);
+  }
   render(){
-/*   const { doHeader } = this.props;
-    if(doHeader&& doHeader.list){//填充数据
-        for(let i=0;i<doHeader.list.length;i++){
-            let bool = false;
-            for(let j=0;j<data.length;j++){
-                if(data[j].key == doHeader.list[i].key ){
-                    bool = true;
-                    break;
-                }
-            }
-            if(!bool){
-                data.push(doHeader.list[i]);
-            }
-        }
-    }*/
+    const { dataSource } = this.props;
    const columns = [{
-      title: '用户名',
+        title: '用户名',
         dataIndex: 'username',
         width:'30%',
         key: 'username',
     }, {
       title: '姓名',
-      dataIndex: 'name',
-      key: 'name',
+      dataIndex: 'realname',
+      key: 'realname',
     }, {
       title: '邮箱',
       dataIndex: 'email',
       key: 'email',
     }, {
       title: '手机',
-      dataIndex: 'phonenum',
-      key: 'phonenum',
+      dataIndex: 'tel',
+      key: 'tel',
     }, {
       title: '功能',
-      dataIndex: 'func',
-      key: 'func',
+      dataIndex: 'functions',
+      key: 'functions',
+      render: (text, record, index) => {
+        var data = record.functions.map((item,i)=>{
+          return item.functionName;
+        });
+        return (data);
+      }
     }, {
       title: '操作',
       dataIndex: 'operation',
@@ -61,7 +55,7 @@ class Tableuser extends React.Component {
     }];
     return (
      
-          <Table  dataSource={this.props.dataSource} columns={columns}/*columns={this.props.tableColumns}*/ />
+          <Table  dataSource={dataSource} columns={columns} rowKey={record => record.userId} pagination={false} />
       
     );
   }

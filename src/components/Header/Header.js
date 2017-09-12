@@ -1,11 +1,12 @@
 import React from 'react'
-import { IndexLink, Link } from 'react-router'
+import { IndexLink, Link ,browserHistory} from 'react-router'
 /*import '../../../node_modules/antd/dist/antd.css'*/
 import '../../public/_module/css/base.css'
 import '../../public/_module/js/common.js'
 import './Header.css'
 import { Tabs } from 'antd'
 import Logo from '../../public/_module/images/logo.png'
+import HTTPUtil from '../../utils/request';
 const TabPane = Tabs.TabPane
 const tabs=[
     {
@@ -60,6 +61,22 @@ function callback(key) {
 
   console.log(key);
   
+};
+let headers = { 
+  'token': sessionStorage.getItem('token')
+};
+function eidtPwd(){
+  HTTPUtil.post('http://10.5.224.23:8181/MaintenanceSystem/user/loginout','',headers).then((json) => {  
+    //处理 请求success  
+    if(json.status === '000000000' ){  
+            browserHistory.push('/login')  
+        }else{  
+             //处理自定义异常  
+           alert(json.message);
+        }  
+    },(json)=>{
+     //TODO 处理请求fail  
+  })  
 }
 
 export const Header = () => (
@@ -82,7 +99,7 @@ export const Header = () => (
         </Tabs>
       </div>
       <div className="log-out"><span>Hi,某某某</span>
-      <a href="/login" ><i className="iconfont icon-Close-Button"></i></a></div>
+      <a href="javascript:;" onClick={eidtPwd}><i className="iconfont icon-Close-Button"></i></a></div>
     </div>
   </div>
 )
