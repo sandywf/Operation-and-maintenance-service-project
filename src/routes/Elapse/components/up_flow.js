@@ -1,114 +1,65 @@
 import React from 'react';
 import ReactEcharts from 'echarts-for-react';
-const Up = React.createClass({
-      propTypes: {},
-      timeTicket: null,
-    getInitialState: function() {
-        return {option: this.getOption()};
-    },
-    fetchNewDate: function() {
-        let axisData = (new Date()).toLocaleString().replace(/^\D*/,'');
-        let option = this.state.option;
-        let data0 = option.series[0].data;
-        data0.shift();
-        data0.push(Math.round(Math.random() * 1000));
-        option.xAxis[0].data.shift();
-        option.xAxis[0].data.push(axisData);
-        this.setState({option: option});
-    },
-    componentDidMount: function() {
-        if (this.timeTicket) {
-            clearInterval(this.timeTicket);
-        }
-        this.timeTicket = setInterval(this.fetchNewDate, 1000);
-    },
-    componentWillUnmount: function() {
-        if (this.timeTicket) {
-            clearInterval(this.timeTicket);
-        }
-    },
-    getOption: function() {
+class UP extends React.Component {
+    constructor(props) {
+        super(props);
+    
+    }
+    getOption(){  
+        const xData = this.props.flowData ? this.props.flowData.publishBpsXList : [];
+        const yData = this.props.flowData ? this.props.flowData.publishBpsYList : [];
+        const yName = this.props.flowData && this.props.flowData.publishBpsYUnit;
         const option = {
             title: {
                 text: '上行流量',
                x: "center"
             },
-            tooltip: {
-                trigger: 'axis'
-            },
             legend: {
                 x: "left",
                data:[{name:'流量'}]
             },
-            toolbox: {
-                show: true,
-                feature: {
-                    dataView: {readOnly: false},
-                    restore: {},
-                    saveAsImage: {}
-                }
+            tooltip: {
+                trigger: 'axis',
+                axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                  type : 'line'        // 默认为直线，可选为：'line' | 'shadow'
+                },
+                formatter: "{b}<br/>{a}:{c}"
             },
-          
+           
             xAxis: [
-                {
-                    type: 'category',
-                    boundaryGap: true,
-                    data: (function (){
-                        let now = new Date();
-                        let res = [];
-                        let len = 50;
-                        while (len--) {
-                            res.unshift(now.toLocaleString().replace(/^\D*/,''));
-                            now = new Date(now - 432000000);
-                            /*console.log(res.unshift(month.toString()+"/"+ day.toString()+ " "+hour.toString()+":"+mm.toString()));*/
-                        }
-                        return res;
-                    })()
-                }
-              
+              {
+                type: "category",
+                name: "x",
+                splitLine: {show: false},
+                data: xData,
+                axisLabel :{rotate:25,interval:0}  
+              }
             ],
             yAxis: [
-                {
-                    type: 'value',
-                    scale: true,
-                    name: '上行流量(KB/S)',
-                    min: 0,
-                    boundaryGap: [0.2, 0.2]
-                }
-             
+              {
+                type: 'value',
+                scale: true,
+                name: yName,
+                min: 0,
+                boundaryGap: [0.2, 0.2]
+              }
             ],
             series: [
-                {
-                    name:'流量',
-                    type:'line',
-                    itemStyle:{normal : {lineStyle:{color:'#4789e3'}}}, 
-                    animationEasing: 'elasticOut',
-                    animationDelay: function (idx) {
-                        return idx * 10;
-                    },
-                    animationDelayUpdate: function (idx) {
-                        return idx * 10;
-                    },
-                    data:(function (){
-                        let res = [];
-                        let len = 0;
-                        while (len < 50) {
-                            res.push((Math.random()*10 + 5).toFixed(1) - 0);
-                            len++;
-                        }
-                        return res;
-                    })()
-                }
+              {
+                name:'流量',
+                type:'line',
+                itemStyle:{normal : {lineStyle:{color:'#4ab6b6'}}}, 
+                smooth: true,
+                data:yData
+              }
             ]
         };
         return option;
-    },
-    render: function() {
+    }
+    render() {
         return (            
-            <ReactEcharts ref='echarts_react' option={this.state.option} style={{height: 300}} />
+            <ReactEcharts ref='echarts_react' option={this.getOption()} style={{height: 300}} />
         );
     }
-});
-
-
-export default Up;
+};
+export default UP;

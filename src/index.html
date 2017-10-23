@@ -3,9 +3,28 @@
 <head>
   <title>运维平台</title>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
 </head>
 <body>
-  <div id="root" style="height: 100%;background-color:#fff"></div>
+<div id="root" ></div>
 </body>
+<script>
+    window.rootUi = localStorage.getItem('rootUi');
+    window.rootServer = localStorage.getItem('rootServer');
+    
+    var venderScript = document.createElement('script');
+    venderScript.setAttribute('src', rootUi + '/front/dist/vendor.js');
+    var appScript = document.createElement('script');
+    appScript.setAttribute('src', rootUi + '/front/dist/app.js');
+    var style = document.createElement('link');
+    var body = document.getElementsByTagName('body')[0];
+    var head = document.getElementsByTagName('head')[0];
+    style.href = rootUi + '/front/dist/app.css';
+    style.rel = 'stylesheet';
+    style.type = 'text/css';
+    head.appendChild(style);
+    body.append(venderScript);
+    body.append(appScript);
+  </script>
+
 </html>

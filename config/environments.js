@@ -1,6 +1,22 @@
 // Here is where you can define configuration overrides based on the execution environment.
 // Supply a key to the default export matching the NODE_ENV that you wish to target, and
 // the base configuration will apply your overrides before exporting itself.
+
+if(process.env.NODE_ENV === 'production'){
+  var originPath = './';
+}else{
+  var originPath = '/front/dist';
+}
+
+if (process.argv && process.argv.length > 0) {
+  var last = process.argv[process.argv.length-1];
+
+  var url = last.split('=')[1];
+  if (url) {
+    originPath = url;
+    console.log('wqqwsqws', url);
+  }
+}
 module.exports = {
   // ======================================================
   // Overrides when NODE_ENV === 'development'
@@ -12,11 +28,12 @@ module.exports = {
     compiler_public_path: `http://${config.server_host}:${config.server_port}/`
   }),
 
+
   // ======================================================
   // Overrides when NODE_ENV === 'production'
   // ======================================================
   production: (config) => ({
-    compiler_public_path: '/',
+    compiler_public_path: originPath,
     compiler_fail_on_warning: false,
     compiler_hash_type: 'chunkhash',
     compiler_devtool: null,

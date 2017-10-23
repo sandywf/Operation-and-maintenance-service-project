@@ -1,14 +1,14 @@
 import { connect } from 'react-redux'
-import { plus } from './../modules/elapse'
+import { actions } from '../modules/counter'
 
-import Elapse from './../components/Elapse'
 
-const mapDispatchtoProps = {
-  plus
-}
+import Counter from '../components/Counter'
 
+
+const mapDispatchToProps = actions;
 const mapStateToProps = (state) => ({
-  elapse: state.elapse
+    dmsData: state.elapse.dmsData,
+    flowData:state.elapse.flowData
 })
 
-export default connect(mapStateToProps, mapDispatchtoProps)(Elapse)
+export default connect(mapStateToProps, mapDispatchToProps)(Counter)

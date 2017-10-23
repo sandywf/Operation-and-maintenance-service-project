@@ -1,25 +1,29 @@
 import React from 'react';
 import { Modal,Table } from 'antd';
-import { IndexLink, Link } from 'react-router'
-const item = [{
-  name: '天津流',
-  path:'',
-  key: 'name',
-},{
-  name: '安徽流',
-  path:'',
-  key: 'age',
-}];
+
+import {hashHistory} from 'react-router';
+import {createHashHistory} from 'history';
+var routerHistory =  require('react-router').useRouterHistory;  
+const appHistory = routerHistory(createHashHistory)({queryKey:false});  
 
 class Modaldia extends React.Component {
+     jumpFlow=(link,flow)=>{
+        appHistory.push({
+            pathname: link,
+            query: {
+                streamName:flow,
+            },
+        })
+    }
     render() {
+        const {modalSource}=this.props;
         return(
             <Modal title="活跃流" key={this.props.newKey} visible={this.props.visible} onCancel={this.props.del} footer={null}>
-                <div id="area">
-                {item.map((item,i)=>{
-                        return <Link key={item.key} to={item.path} activeClassName='route--active'>
-                                    {item.name}
-                            </Link>
+                <div id="active_flow">
+                    {modalSource && modalSource.map((item,i)=>{
+                        return <a href="javascript:;" onClick={()=>this.jumpFlow('flow',item)} >
+                                    {item}
+                            </a>
                     })}
                 </div>
             </Modal>

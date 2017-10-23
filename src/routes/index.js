@@ -1,4 +1,8 @@
 // We only need to import the modules necessary for initial render
+import React from 'react'
+import { Route,IndexRoute} from 'react-router'
+//import HTTPUtil from '../utils/request';
+
 import CoreLayout from '../layouts/CoreLayout'
 import Home from './Home'
 import CounterRoute from './Counter'
@@ -21,82 +25,32 @@ import 'whatwg-fetch';
 import 'es6-promise/dist/es6-promise.min.js';
 import 'fetch-ie8/fetch.js';
 import  'babel-plugin-import';
-import utils from '../utils/utils';
-/*console.log(document.body.clientWidth);
-if(document.body.clientWidth<=1360){
-    document.body.overflowX="scroll"; 
-}*/
-// function requireAuth(nextState,replace,next) {
-//     if(utils.wToken) {
-//         replace({
-//             pathname: '/',
-//             state: {
-//                 nextPathname: nextState.location.pathname
-//             }
-//         })
-//     }else{
-//         replace("/login")//如果token信息为空就直接到登录页面
-//         next();
-//     }
-// }
-function requireAuth(nextState, replace) {
-    //  if (!auth.loggedIn()) {
-	/**
-	 * 模拟登陆 生成大于5的随机数 满足条件就视为后端登陆成功
-	 *
-	 * @returns {undefined}
-	 */
-	if (Math.random()*10 > 5) {
-        replace({
-            pathname: '/login',
-            state: {
-                nextPathname: nextState.location.pathname
-            }
-        })
+
+/* 进入路由的判断*/
+function isLogin(nextState, replaceState) {
+    if (!(localStorage.getItem('token')) ){
+      replaceState('/login')
     }
-}
-/*  Note: Instead of using JSX, we recommend using react-router
-    PlainRoute objects to build route definitions.   */
-export const createRoutes = (store) => ({
-    childRoutes: [LoginRoute(store), {
-        path: '/',
-        component: CoreLayout,
-        indexRoute: Home,
-        onEnter: requireAuth,
-        childRoutes: [
-            CounterRoute(store),
-            ZenRoute(store),
-            ElapseRoute(store),
-            RouteRoute(store),
-            Dms(store),
-            Dmc(store),
-            Flow(store),
-            User(store),
-            Personal(store),
-            PageNotFound(),
-            Redirect
-        ]
-    }]
-
-
-})
-
-/*  Note: childRoutes can be chunked or otherwise loaded programmatically
-    using getChildRoutes with the following signature:
-
-    getChildRoutes (location, cb) {
-      require.ensure([], (require) => {
-        cb(null, [
-          // Remove imports!
-          require('./Counter').default(store)
-        ])
-      })
-    }
-
-    However, this is not necessary for code-splitting! It simply provides
-    an API for async route definitions. Your code splitting should occur
-    inside the route `getComponent` function, since it is only invoked
-    when the route exists and matches.
-*/
-
+  }
+    export const createRoutes = (store) => ([{ 
+            path: '/',
+            component   :CoreLayout,
+            indexRoute  : Home(store),
+            onEnter:isLogin,
+            childRoutes: [
+                CounterRoute(store),
+                ZenRoute(store),
+                ElapseRoute(store),
+                RouteRoute(store),
+                Dms(store),
+                Dmc(store),
+                Flow(store),
+                User(store),
+                Personal(store),
+                PageNotFound(),
+            ]
+        },
+        LoginRoute(store),
+        Redirect
+    ])
 export default createRoutes

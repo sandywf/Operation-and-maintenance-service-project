@@ -1,7 +1,7 @@
 import React from 'react';
 import {withRouter,browserHistory} from 'react-router';
 import { Form, Icon, Input, Button, Checkbox ,Modal} from 'antd';
-
+import Logo from '../../../public/_module/images/login-logo.png'
 const FormItem = Form.Item;
 //样式文件
 import classes from './msLogin.scss';
@@ -13,7 +13,10 @@ const Login = withRouter(
           error: false
         }
       },
-
+      componentDidMount(){
+        var body_element = document.getElementsByTagName("body")[0];
+        body_element.style.backgroundColor= "#193760";
+      },
       handleSubmit(e) {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
@@ -31,7 +34,7 @@ const Login = withRouter(
             <div className={classes['zweb']}>
               <div className={classes["container"]}>
                 <div className={classes["ms-logo"]}>
-                  <div className={classes["ms-circle"]}>logo</div>
+                  <div className={classes["ms-circle"]}> <img alt='LOGO' src={Logo} /></div>
                 </div>     
                 <div className={classes["ms-login"]}>
                   <FormItem>

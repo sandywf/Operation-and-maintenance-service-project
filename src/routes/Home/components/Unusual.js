@@ -1,87 +1,74 @@
 import React from 'react';
-import { Table, Icon, Popconfirm,Select,Menu, Dropdown } from 'antd';//表格
+import { ReactInterval } from 'react-interval';
+import moment from 'moment';
+import Timebar from '../../../components/common/Time';
+import { Table, Icon, Popconfirm,Select,Menu, Dropdown } from 'antd';
 const { Column, ColumnGrounp } = Table;
-const data = [{
-	key:'1',
-	DMSName:'DMS名称',
-	DMCName:'DMC名称',
-	ErrorNum:'2212'
-},{
-	key:'2',
-	DMSName:'DMS名称',
-	DMCName:'DMC名称',
-	ErrorNum:'3333'
-},{
-	key:'3',
-	DMSName:'DMS名称',
-	DMCName:'DMC名称',
-	ErrorNum:'3333'
-},{
-	key:'4',
-	DMSName:'DMS名称',
-	DMCName:'DMC名称',
-	ErrorNum:'3333'
-},{
-	key:'5',
-	DMSName:'DMS名称',
-	DMCName:'DMC名称',
-	ErrorNum:'3333'
-}]
-const Unusual = React.createClass({
-	 getInitialState: function() {
-      return {
-        time:20000,
-        timeName:'2秒'
-      };
-    },
-    handleMenuClick (e){
-    	this.setState({ time: parseInt(e.key) });
-    	this.setState({timeName: e.domEvent.currentTarget.innerHTML});
-  	},
- 	render: function() { 
- 		const menu = (
-          <Menu onClick={this.handleMenuClick}>
-            <Menu.Item key={10000}>10秒</Menu.Item>
-            <Menu.Item key={30000}>30秒</Menu.Item>
-            <Menu.Item key={60000}>1分钟</Menu.Item>
-          </Menu>
-    	);
+import {hashHistory} from 'react-router';
+import {createHashHistory} from 'history';
+var routerHistory =  require('react-router').useRouterHistory;  
+const appHistory = routerHistory(createHashHistory)({queryKey:false});  
+
+class Unusual extends React.Component {
+	state = {
+		timeName:'1分钟',
+		timeout:60000,
+		newTime:moment().format('YYYY-MM-DD HH:mm'),
+		all:'unusual'
+	}
+	handleMenuClick =(e)=>{
+		this.setState({timeName: e.domEvent.currentTarget.innerHTML});
+		this.setState({timeout:parseInt(e.key)});
+	}
+	tick() {
+			this.setState({newTime:moment().format('YYYY-MM-DD HH:mm')});
+	}
+	jumpDmc=(link,dmc)=>{
+		appHistory.push({
+				pathname: link,
+				query: {
+						dmcName:dmc
+				},
+		})
+	}
+	jumpDms=(link,dmsname)=>{
+		appHistory.push({
+				pathname: link,
+				query: {
+						dmsName:dmsname
+				},
+		})
+	}
+ 	render() { 
+		const pagination = {
+			total: this.props.unsualDatas,
+			current:this.props.unsualCur,
+			//showSizeChanger: true,
+		};
+		const columns = [{
+			title: 'DMS名称',
+			dataIndex: 'dmsServerName',
+			key: 'dmsServerName',
+			width: 350,
+			render:(text,record)=><a href="javascript:;" title={text} className="ellips width350" onClick={()=>this.jumpDms('dms',record.dmsServerName)} >{text}</a>,
+		  }, {
+			title: 'DMC名称',
+			dataIndex: 'dmcServerName',
+			key: 'dmcServerName',
+			width: 350,
+			render:(text,record)=><a href="javascript:;" title={text} className="ellips width350" onClick={()=>this.jumpDmc('dmc',record.dmcServerName)} >{text}</a>,
+		  }, {
+			title: '错误数量',
+			dataIndex: 'errorNum',
+			key: 'errorNum',
+		  }];
   	return (
   		<div className="ms-abnormal fl linear">
-  			<p className="ms-status">
-				<i className="iconfont icon-DMS-Abnormal-condition"></i>
-				<span>DMS异常状态</span>
-				<span className="fr">
-					<em>刷新时间：</em>
-					<time>2017-00-00 00:00</time>
-					<strong>{this.state.timeName}</strong>
-				 <Dropdown overlay={menu}>
-					<i className="iconfont icon-Refresh"></i>
-            	</Dropdown>
-				</span>
-			</p>
-			<Table className="ms-data-table" dataSource={data}>
-				<Column title="DMS名称" key="DMSName" dataIndex=""
-					render = {(text,record) =>(
-						<span>
-							<a href="">{record.DMSName}</a>
-						</span>
-					)}/>
-				<Column title="DMC名称" key="DMCName" dataIndex=""
-					render = {(text,record) =>(
-						<span>
-							<a href="">{record.DMCName}</a>
-						</span>
-					)}/>
-				<Column title="错误数量" key="ErrorNum" dataIndex=""
-					render = {(text,record) =>(
-						<span>
-							{record.ErrorNum}
-						</span>
-					)}/>
-			</Table>
+			<ReactInterval timeout={this.state.timeout} enabled={true} callback={()=>{this.props.getUnusual();this.tick();}} />
+     	 	<Timebar ref="getTime" all ={this.state.all} handleMenuClick={this.handleMenuClick} timeName={this.state.timeName} newTime={this.state.newTime}/>
+			<Table className="ms-data-table" rowkey={(record,key)=>key} dataSource={this.props.unsualData} columns={columns} onChange={this.props.handleChange} pagination={pagination} />
 		</div>
        );
     }
-});
+};
 export default Unusual;

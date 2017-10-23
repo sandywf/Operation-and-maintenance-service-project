@@ -1,14 +1,45 @@
 import React from 'react'
-import { IndexLink, Link ,browserHistory} from 'react-router'
+import { hashHistory,IndexLink, Link ,browserHistory} from 'react-router';
+import {createHashHistory} from 'history';
+var routerHistory =  require('react-router').useRouterHistory;  
+const appHistory = routerHistory(createHashHistory)({queryKey:false});  
 /*import '../../../node_modules/antd/dist/antd.css'*/
 import '../../public/_module/css/base.css'
 import '../../public/_module/js/common.js'
 import './Header.css'
 import { Tabs } from 'antd'
-import Logo from '../../public/_module/images/logo.png'
+import Logo from '../../public/_module/images/main-logo.png'
 import HTTPUtil from '../../utils/request';
 const TabPane = Tabs.TabPane
-const tabs=[
+var userItem = []
+
+function callback(key) {
+  
+};
+function eidtPwd(){
+  HTTPUtil.post('/user/loginout','').then((json) => {  
+    //处理 请求success  
+      localStorage.clear('token')
+      appHistory.push('/login') 
+    },(json)=>{
+     //TODO 处理请求fail  
+  })  
+}
+class Header extends React.Component {
+  componentWillMount(){
+    if(localStorage.getItem('userType')==='normal_user'){
+      userItem = [
+        {path: "/personal", name: "个人资料"},
+      ]
+    }else{
+      userItem = [
+        {path: "/user", name: "用户列表"},
+        {path: "/personal", name: "个人资料"},
+      ]
+    }
+  }
+  render(){
+    const tabs=[
     {
       show:'',
       icon:'iconfont icon-Streaming-Server',
@@ -52,55 +83,33 @@ const tabs=[
       show:'',
       icon:'iconfont icon-allocation',
       name:'配置',
-      Children:[
-          {path: "/user", name: "用户列表"},
-          {path: "/personal", name: "个人资料"},
-    ]}
+      Children:userItem
+    }
 ];
-function callback(key) {
-
-  console.log(key);
-  
-};
-let headers = { 
-  'token': sessionStorage.getItem('token')
-};
-function eidtPwd(){
-  HTTPUtil.post('http://10.5.224.23:8181/MaintenanceSystem/user/loginout','',headers).then((json) => {  
-    //处理 请求success  
-    if(json.status === '000000000' ){  
-            browserHistory.push('/login')  
-        }else{  
-             //处理自定义异常  
-           alert(json.message);
-        }  
-    },(json)=>{
-     //TODO 处理请求fail  
-  })  
-}
-
-export const Header = () => (
+			return(
   <div className="header">
     <div className="head-warp">
       <div className="logo">
-       <img alt='' src={Logo} />
+       <img alt='logo' src={Logo} />
       </div>
       <div className="menu-nav">
          <Tabs defaultActiveKey="0" onChange={callback}>
           {tabs.map((item,i)=>{
             return <TabPane defaultActiveKey="0"  disabled={item.show} tab={ <span><i className={item.icon}></i> {item.name}</span> } key={i}>
               {item.Children.map(function(item,index){
-                return <Link key={index} to={item.path} activeClassName='route--active'>
+                return <IndexLink  key={index} to={item.path} activeClassName='route--active'>
                           {item.name}
-                        </Link>
+                        </IndexLink >
               })}
              </TabPane>
           })}
         </Tabs>
       </div>
-      <div className="log-out"><span>Hi,某某某</span>
+      <div className="log-out"><span>Hi,{localStorage.getItem('realname')}</span>
       <a href="javascript:;" onClick={eidtPwd}><i className="iconfont icon-Close-Button"></i></a></div>
     </div>
   </div>
-)
-export default Header
+);
+}
+}
+export default Header;

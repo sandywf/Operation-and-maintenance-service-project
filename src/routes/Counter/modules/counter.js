@@ -1,92 +1,68 @@
-const listData = {
-    "data": [{
-  key: '1',
-  indIp:'3.1.1.1',
-  indArea: '江苏-苏州',
-  indDmc:'天津DMC',
-  indDms:'天津DMS',
-  indAct:'天津流，北京流',
-  upActflow:22,
-  indflow:'5.5Mbps',
-  dActflow:'11',
-  dClient:7,
-  dflow:'1.5Mbps',
-  packet:'7%',
-}, {
-  key: '2',
-  indIp:'10.1.1.1',
-  indArea: '江苏-苏州',
-  indDmc:'天津DMC',
-  indDms:'天津DMS',
-  indAct:'天津流，北京流',
-  upActflow:33,
-  indflow:'1.5Mbps',
-  dActflow:'5',
-  dClient:7,
-  dflow:'6.5Mbps',
-  packet:'32%',
-}, {
-  key: '3',
-  indIp:'13.1.1.1',
-  indArea: '江苏-苏州',
-  indDmc:'天津DMC',
-  indDms:'天津DMS',
-  indAct:'天津流，北京流',
-  upActflow:4,
-  indflow:'1.5Mbps',
-  dActflow:'6',
-  dClient:3,
-  dflow:'1.5Mbps',
-  packet:'3%',
-}]
-}
 
-const freshMenu = {
-    "data2": [{
-          key: '1',
-          name: '胡彦斌',
-          age: 32,
-        }, {
-          key: '2',
-          name: '胡彦祖',
-          age: 42,
-    }]
-}
+import HTTPUtil from '../../../utils/request';
 // ------------------------------------
 // Constants
 // ------------------------------------
 export const COUNTER_INCREMENT = 'COUNTER_INCREMENT'
-export const COUNTER_MENU = 'COUNTER_MENU'
+
+export const IP_FLOW = 'IP_FLOW'
+
 // ------------------------------------
 // Actions
 // ------------------------------------
 
-export const getKHData = () => {
+export const getKHData = (params = { curPage: 1, pageSize: 20,dmcTag:'',dmsTag:'',ip:'',streamName:'',sortsType:'',sortsKey:''}) => {
     return (dispatch, getState) => {
-        return fetch("https://api.github.com/users/suncn").then(response => {
-            dispatch({
-                type: COUNTER_INCREMENT,
-                payload: listData
-            })
-        })
+        let formData = new FormData();  
+            formData.append("dmcTag",params.dmcTag); 
+            formData.append("dmsTag",params.dmsTag); 
+            formData.append("ip",params.ip); 
+            formData.append("streamName",params.streamName);   
+            formData.append("orderAsc",params.sortsType);  
+            formData.append("orderColumn",params.sortsKey); 
+            formData.append("curPage",params.curPage); 
+            formData.append("pageSize",params.pageSize);
+        return HTTPUtil.post('/stream/ip/list',formData).then((res) => {  
+            if(res){
+                res = res.result;
+                //处理 请求success  
+                dispatch({
+                    type: COUNTER_INCREMENT,
+                    res
+                }) 
+            }  
+        },(res)=>{
+             //TODO 处理请求fail     
+        }) 
+    }
+}
+// ip列表上下行活跃流信息
+export const getFlowData = (params = { curPage: 1, pageSize: 10,ip:'',upOrDown:'down'}) => {
+    return (dispatch, getState) => {
+        let formData = new FormData();  
+            formData.append("dmcTag",params.upOrDown); 
+            formData.append("ip",params.ip);  
+            formData.append("curPage",params.curPage); 
+            formData.append("pageSize",params.pageSize);
+        return HTTPUtil.post('/stream/ip/stream-name',formData).then((res) => {  
+             if(res){
+                res = res.result;
+                //处理 请求success  
+                dispatch({
+                    type: IP_FLOW,
+                    res
+                }) 
+            }
+        },(res)=>{
+             //TODO 处理请求fail     
+        }) 
     }
 }
 
-
-export const getMENUData = () => {
-    return (dispatch, getState) => {
-        return fetch("https://api.github.com/users/suncn").then(response => {
-            dispatch({
-                type: COUNTER_MENU,
-                payload: freshMenu
-            })
-        })
-    }
-}
 
 export const actions = {
   getKHData,
-  getMENUData
+  getFlowData
 }
 
 // ------------------------------------
@@ -94,13 +70,27 @@ export const actions = {
 // ------------------------------------
 const ACTION_HANDLERS = {
   [COUNTER_INCREMENT]: (state, action) => {
-    state = Object.assign(state, action.payload)
-    return Object.create(state);
+    if(action.res){
+         return Object.assign({}, state, {
+            data:action.res.data,
+            pageCur:action.res.curPage,
+            pageDatas:action.res.totalDatas,
+            pages:action.res.totalPages
+         });
+    }else{
+        return state;
+    }
   },
-  [COUNTER_MENU]: (state, action) => {
-    state = Object.assign(state, action.payload)
-    return Object.create(state);
-  }
+  [IP_FLOW]: (state, action) => {
+    if(action.res){
+         return Object.assign({}, state, {
+            flowData:action.res,
+         });
+    }else{
+        return state;
+    }
+  },
+   
 }
 
 // ------------------------------------
@@ -108,6 +98,10 @@ const ACTION_HANDLERS = {
 // ------------------------------------
 const initialState = {
     data: [],
+    pageCur:'',
+    pageDatas:'',
+    pages:'',
+    flowData:[],
 }
 export default function counterReducer(state = initialState, action) {
     const handler = ACTION_HANDLERS[action.type]

@@ -8,7 +8,15 @@ import Counter from '../components/Counter'
 const mapDispatchToProps = actions;
 const mapStateToProps = (state) => ({
     data: state.flow.data,
-    data2:state.flow.data2
+    pageCur:state.flow.pageCur,
+    pageDatas:state.flow.pageDatas,
+    pages:state.flow.pages,
+    areaData:state.flow.areaData,
+    areaPageCur:state.flow.areaPageCur,
+    areapageDatas:state.flow.areapageDatas,
+    syncData:state.flow.syncData,
+    syncPageCur:state.flow.syncPageCur,
+    syncpageDatas:state.flow.syncpageDatas,
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Counter)

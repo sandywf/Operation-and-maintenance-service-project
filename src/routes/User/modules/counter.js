@@ -2,7 +2,6 @@
 // Constants
 // ------------------------------------
 import HTTPUtil from '../../../utils/request';
-import utils from '../../../utils/utils';
 import { Modal, Button } from 'antd';
 
 export const COUNTER_INCREMENT = 'COUNTER_INCREMENT'
@@ -15,20 +14,17 @@ export const IS_VISIBLE = 'IS_VISIBLE'
 // Actions
 // ------------------------------------
 
-let headers = {'token':utils.wToken};
 export const getKHData = () => {
     return (dispatch, getState) => {
-        return HTTPUtil.post(utils.host+'/user/list','',headers).then((res) => {  
-            //处理 请求success  
-            if(res.status === '000000000' ){  
+        return HTTPUtil.post('/user/list','').then((res) => {  
+            if(res.status=='000000000'){
+                res = res.result;
+                //处理 请求success  
                 dispatch({
                     type: COUNTER_INCREMENT,
                     res
                 })
-            }else{  
-                     //处理自定义异常  
-                Modal.error({content:res.message});
-            }  
+            }
         },(res)=>{
              //TODO 处理请求fail     
         }) 
@@ -44,20 +40,17 @@ export const doAdd = ({current,data})=>{
     formData.append("realname",current.realname); 
     formData.append("tel",current.tel);
     return (dispatch, getState) => {
-        return HTTPUtil.post(utils.host+'/user/add',formData,headers).then((res) => {  
-            //处理 请求success  
-            if(res.status === '000000000' ){  
-                Modal.success({content:res.message});
-                dispatch({
-                    type:DO_ADD,
-                    data
-                });
-                dispatch(getKHData());
-            }else{  
-                     //处理自定义异常  
-                Modal.error({content:res.message});
-            }  
-           },(res)=>{
+        return HTTPUtil.post('/user/add',formData).then((res) => {  
+                if(res){
+                    Modal.success({content:res.message});
+                    //处理 请求success  
+                    dispatch({
+                        type:DO_ADD,
+                        data
+                    });
+                    dispatch(getKHData());
+                }
+            },(res)=>{
              //TODO 处理请求fail     
         }) 
     }
@@ -77,19 +70,16 @@ export const doModify = ({current,data,userId})=>{
     formData.append("tel",current.tel);
     formData.append("userId",userId);
     return (dispatch, getState) => {
-        return HTTPUtil.post(utils.host+'/user/info/modify',formData,headers).then((res) => {  
-            //处理 请求success  
-            if(res.status === '000000000' ){  
+        return HTTPUtil.post('/user/info/modify',formData).then((res) => {  
+             if(res){
                 Modal.success({content:res.message});
+                //处理 请求success  
                 dispatch({
                     type:DO_MODIFY,
                     data
                 });
                 dispatch(getKHData());
-            }else{  
-                     //处理自定义异常  
-                Modal.error({content:res.message});
-            }  
+             }
            },(res)=>{
              //TODO 处理请求fail     
         }) 
@@ -100,19 +90,17 @@ export const doDelete = ({record,data})=>{
     let formData = new FormData();  
     formData.append("userId",record.userId); 
     return (dispatch, getState) => {
-        return HTTPUtil.post(utils.host+'/user/delete',formData,headers).then((res) => {  
+        return HTTPUtil.post('/user/delete',formData).then((res) => {  
+            // Modal.success({content:res.message});
             //处理 请求success  
-            if(res.status === '000000000' ){  
+            if(res){
                 Modal.success({content:res.message});
                 dispatch({
                     type:DO_DELETE,
                     data
                 });
                 dispatch(getKHData());
-            }else{  
-                     //处理自定义异常  
-                Modal.error({content:res.message});
-            }  
+            }
            },(res)=>{
              //TODO 处理请求fail     
         }) 
@@ -161,7 +149,7 @@ export const actions = {
 // ------------------------------------
 const ACTION_HANDLERS = {
   [COUNTER_INCREMENT]: (state, action) => {
-    return {data:action.res.result};
+    return {data:action.res};
   },
   [DO_DELETE]: (state, action) => {
     return {data:action.data};

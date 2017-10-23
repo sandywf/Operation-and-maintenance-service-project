@@ -1,6 +1,10 @@
-import {browserHistory} from 'react-router';
+import {hashHistory,browserHistory} from 'react-router';
+import {createHashHistory} from 'history';
+var routerHistory =  require('react-router').useRouterHistory;  
+const appHistory = routerHistory(createHashHistory)({queryKey:false});  
 import HTTPUtil from '../../../utils/request';
-import utils from '../../../utils/utils';
+//import utils from '../../../utils/utils';
+import {Modal} from 'antd';
 // ------------------------------------
 // Constants
 // ------------------------------------
@@ -9,30 +13,28 @@ export const LOGIN = 'LOGIN'
 // ------------------------------------
 // Actions
 // ------------------------------------
+
 export const login = ({username,password})=>{
   let formData = new FormData();  
   formData.append("username",username); 
   formData.append("password",password); 
+  const headers = {};
   return (dispatch, getState) => {
-      return HTTPUtil.post(utils.host+'/user/login',formData).then((json) => {  
-      //处理 请求success  
-        if(json.status === '000000000' ){  
-              //我们假设业务定义code为0时，数据正常  
-              //sessionStorage.setItem('token',json.result.token)
-              utils.wToken = json.result.token;
-              //global.wToken = json.result.token;
+      return HTTPUtil.post('/user/login',formData,headers).then((json) => {  
+        if(json){
+          json = json.result;
+          localStorage.setItem('token',json.token);
+          localStorage.setItem('realname',json.realname);
+          localStorage.setItem('userType',json.userType);
               dispatch({
                 type:LOGIN,
                 json
-              })
-              browserHistory.push('/')  
-          }else{  
-              //处理自定义异常  
-              Modal.error({content:json.message});
-          }  
+              });
+              appHistory.push('/');
+        }
+         
     },(json)=>{
-      //TODO 处理请求fail  
-          
+      //TODO 处理请求fail       
     })  
   }
 }
@@ -45,7 +47,7 @@ export const actions = {
 // ------------------------------------
 const ACTION_HANDLERS = {
   [LOGIN]    : (state, action) => {
-    return {data:action.json.message}
+    return {data:action.json}
   }
 }
 

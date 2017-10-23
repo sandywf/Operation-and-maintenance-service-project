@@ -91,7 +91,7 @@
 }
 .user-md .ant-modal-content .ant-modal-footer{border-top:none;text-align: center;border-radius: 2px;padding-bottom: 40px;}
 .user-md .ant-modal-footer .ant-btn{
-	padding:10px 45px;
+	padding:8px 45px;
     border-radius: 2px;
     font-weight: bold;
     background-color:#bebebe;
@@ -100,3 +100,10 @@
 .user-md .ant-modal-footer .ant-btn-primary{background-color:#446ba0;}
 .user-md .ant-btn-primary:focus, .user-modal .ant-btn-primary:hover{background-color: #446ba0;
     border-color: #446ba0;}
+.m5{display: inline-block;margin:0 5px;}
+.opt-user{display: inline-block;margin: 0 5px;}
+
+#user .ant-popover-buttons button {
+    margin-left: 5px;
+}
+#user{width:100%;height:100%}

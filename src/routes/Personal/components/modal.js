@@ -13,8 +13,8 @@ class Pmodal extends React.Component {
       let current = (this.props.form.getFieldsValue());
       const data = this.props.data;
       this.props.updatePwd({current,data,userId});
+      this.props.show();
     });
-    this.props.show();
   }  
   checkPassword = (rule, value, callback) => {
     const form = this.props.form;
@@ -28,7 +28,7 @@ class Pmodal extends React.Component {
   render() {
     const { getFieldDecorator } = this.props.form;
   return (
-   <Modal className="ms-modal" title="设置密码" data= {this.props.data} visible={this.props.modalVisible} onOk={(e)=>this.handleOk(e,this.props.userId)} onCancel={this.props.handleCancel}
+   <Modal key={this.props.key} className="ms-modal" title="设置密码" data= {this.props.data} visible={this.props.modalVisible} onOk={(e)=>this.handleOk(e,this.props.userId)} onCancel={this.props.handleCancel}
     footer={<Button className="ms-perbtn" onClick={(e)=>this.handleOk(e,this.props.userId)}>确认</Button>}>
               <Form>
               <ul className="ms-password">

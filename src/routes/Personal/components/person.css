@@ -96,3 +96,4 @@ button{
     font-size: 14px;
 }
 #personal .linear{background-color: #f9f9f9;}
+#personal{overflow: hidden;}

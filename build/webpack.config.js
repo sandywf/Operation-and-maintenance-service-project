@@ -5,11 +5,12 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const config = require('../config')
 const debug = require('debug')('app:webpack:config')
 const path = require('path');
+const CleanDist = require('clean-webpack-plugin')
 
-const paths = config.utils_paths
-const __DEV__ = config.globals.__DEV__
-const __PROD__ = config.globals.__PROD__
-const __TEST__ = config.globals.__TEST__
+const paths = config.utils_paths;
+const __DEV__ = config.globals.__DEV__;
+const __PROD__ = config.globals.__PROD__;
+const __TEST__ = config.globals.__TEST__;
 
 debug('Creating configuration.')
 const webpackConfig = {
@@ -38,28 +39,44 @@ webpackConfig.entry = {
 // Bundle Output
 // ------------------------------------
 webpackConfig.output = {
-  filename: `[name].[${config.compiler_hash_type}].js`,
-  chunkFilename: '[chunkhash].js',
+  // filename: `[name].[${config.compiler_hash_type}].js`,
+  filename: `[name].js`,
+  chunkFilename: '[name].js',
   path: paths.dist(),
-  publicPath: '../dist/'
+  publicPath: config.compiler_public_path
 }
 // publicPath: config.compiler_public_path
-console.log('config.compiler_public_path', config.compiler_public_path);
 // ------------------------------------
 // Plugins
 // ------------------------------------
-webpackConfig.plugins = [
-  new webpack.DefinePlugin(config.globals),
-  new HtmlWebpackPlugin({
+var htmlObj;
+
+if(process.env.NODE_ENV === 'production'){
+  htmlObj ={
     template: paths.client('index.html'),
-    hash: true,
+    hash: false,
     favicon: paths.client('static/favicon.ico'),
     filename: 'index.html',
-    inject: 'body',
+    inject: false,
     minify: {
-      collapseWhitespace: true
+      collapseWhitespace: false
     }
-  }),
+  };  
+}else{
+  htmlObj ={
+    template: paths.client('dev.html'),
+    hash: false,
+    favicon: paths.client('static/favicon.ico'),
+    filename: 'index.html',
+    inject: true,
+    minify: {
+      collapseWhitespace: false
+    }
+  };  
+}
+webpackConfig.plugins = [
+  new webpack.DefinePlugin(config.globals),
+  new HtmlWebpackPlugin(htmlObj),
   new webpack.ProvidePlugin({
 
         $:"jquery",
@@ -169,17 +186,22 @@ webpackConfig.postcss = [
     sourcemap: true
   })
 ]
-
+// 清除哈希打包文件
+var cleanpath = path.resolve(__dirname,'../dist/');
+console.log('cleanpath',cleanpath);
+webpackConfig.plugins.push(
+  new CleanDist(cleanpath)
+)
 // File loaders
 /* eslint-disable */
 webpackConfig.module.loaders.push(
-  { test: /\.woff(\?.*)?$/,  loader: 'url?prefix=fonts/&name=[hash:base64:20].[ext]&limit=10000&mimetype=application/font-woff' },
-  { test: /\.woff2(\?.*)?$/, loader: 'url?prefix=fonts/&name=[hash:base64:20].[ext]&limit=10000&mimetype=application/font-woff2' },
-  { test: /\.otf(\?.*)?$/,   loader: 'file?prefix=fonts/&name=[hash:base64:20].[ext]&limit=10000&mimetype=font/opentype' },
-  { test: /\.ttf(\?.*)?$/,   loader: 'url?prefix=fonts/&name=[hash:base64:20].[ext]&limit=10000&mimetype=application/octet-stream' },
-  { test: /\.eot(\?.*)?$/,   loader: 'file?prefix=fonts/&name=[hash:base64:20].[ext]' },
-  { test: /\.svg(\?.*)?$/,   loader: 'url?prefix=fonts/&name=[hash:base64:20].[ext]&limit=10000&mimetype=image/svg+xml' },
-  { test: /\.(png|jpg|gif)$/,    loader: 'url?limit=8192' }
+  { test: /\.woff(\?.*)?$/,  loader: 'url?prefix=fonts/&name=[name].[ext]&limit=10000&mimetype=application/font-woff&publicPath=./' },
+  { test: /\.woff2(\?.*)?$/, loader: 'url?prefix=fonts/&name=[name].[ext]&limit=10000&mimetype=application/font-woff2&publicPath=./' },
+  { test: /\.otf(\?.*)?$/,   loader: 'file?prefix=fonts/&name=[name].[ext]&limit=10000&mimetype=font/opentype&publicPath=./' },
+  { test: /\.ttf(\?.*)?$/,   loader: 'url?prefix=fonts/&name=[name].[ext]&limit=10000&mimetype=application/octet-stream&publicPath=./' },
+  { test: /\.eot(\?.*)?$/,   loader: 'file?prefix=fonts/&name=[name].[ext]&publicPath=./' },
+  { test: /\.svg(\?.*)?$/,   loader: 'url?prefix=fonts/&name=[name].[ext]&limit=10000&mimetype=image/svg+xml&publicPath=./' },
+  { test: /\.(png|jpg|gif)$/,loader: 'url?name=[name].[ext]&limit=8192&publicPath=./' }
 )
 /* eslint-enable */
 
@@ -201,7 +223,7 @@ if (!__DEV__) {
   })
 
   webpackConfig.plugins.push(
-    new ExtractTextPlugin('[contenthash].css', {
+    new ExtractTextPlugin('[name].css', {
       allChunks: true
     })
   )

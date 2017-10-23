@@ -3,6 +3,7 @@
     "server": "cd server && json-server db.js -w -p 3838",
     "clean": "rimraf dist",
     "compile": "better-npm-run compile",
+    "publish": "better-npm-run publish",
     "lint": "eslint bin build config server src tests",
     "lint:fix": "npm run lint -- --fix",
     "start": "better-npm-run start",
@@ -18,6 +19,13 @@
     "compile": {
       "command": "node bin/compile",
       "env": {
+        "DEBUG": "app:*"
+      }
+    },
+    "publish": {
+      "command": "node bin/compile",
+      "env": {
+        "NODE_ENV": "production",
         "DEBUG": "app:*"
       }
     },
@@ -81,7 +89,6 @@
     "css-loader": "^0.25.0",
     "cssnano": "^3.7.4",
     "debug": "^2.2.0",
-    "echarts": "^3.4.0",
     "echarts-for-react": "^1.1.6",
     "element-resize-event": "^2.0.7",
     "es6-promise": "^3.3.1",
@@ -115,6 +122,7 @@
     "yargs": "^5.0.0"
   },
   "devDependencies": {
+    "babel-cli": "^6.26.0",
     "babel-core": "^6.17.0",
     "babel-eslint": "^6.0.0-beta.6",
     "babel-plugin-import": "^1.1.1",
@@ -123,6 +131,7 @@
     "chai-as-promised": "^5.3.0",
     "chai-enzyme": "^0.5.0",
     "cheerio": "^0.20.0",
+    "clean-webpack-plugin": "^0.1.16",
     "codecov": "^1.0.1",
     "enzyme": "^2.0.0",
     "es6-promise": "^3.2.1",
@@ -144,10 +153,13 @@
     "karma-phantomjs-launcher": "^1.0.0",
     "karma-webpack-with-fast-source-maps": "^1.9.2",
     "mocha": "^3.0.1",
+    "moment": "^2.18.1",
     "nodemon": "^1.10.2",
     "phantomjs-prebuilt": "^2.1.12",
     "react-addons-test-utils": "^15.0.0",
+    "react-router-redux": "^4.0.8",
     "redbox-react": "^1.2.10",
+    "redux-auth-wrapper": "^2.0.1",
     "sinon": "^1.17.5",
     "sinon-chai": "^2.8.0",
     "watchjs": "^0.0.0",

@@ -1,9 +1,6 @@
 
-
-
 .zweb{
-background:url(../../../public/_module/images/yw-bg.png) no-repeat center top #193760;
-
+	background:url(../../../public/_module/images/yw-bg.png) no-repeat center top #193760;
 }
 .linear{
 	border:1px solid red;
@@ -19,20 +16,13 @@ background:url(../../../public/_module/images/yw-bg.png) no-repeat center top #1
 // LOGO 
 .ms-logo{
 	height:290px;
-	margin:0 0 58px 0;
+	margin:0 0 33px 0;
 	border:1px solid transparent;
 	background:url(../../../public/_module/images/yw-logo.png) no-repeat center bottom;
 }
 .ms-circle{
-	width:104px;
-	height:104px;
-	margin:116px auto 0 auto;
-	border-radius:104px;
-	background:red;
+	margin:114px auto 0 auto;
 	text-align: center;
-	line-height: 104px;
-	font-size:30px;
-	color:#fff;
 }
 // login 
 .ms-login{
@@ -43,7 +33,10 @@ background:url(../../../public/_module/images/yw-bg.png) no-repeat center top #1
 	display:block;
 	position:relative;
 	width:100%;
-    border-bottom: 1px solid #a6afb6;
+    border-bottom: 1px solid #98a2af;
+}
+.ant-form-item{
+	margin-bottom:0;
 }
 .h100{
 	height:100px;
@@ -84,13 +77,13 @@ background:url(../../../public/_module/images/yw-bg.png) no-repeat center top #1
 	color:#16c7c7;
 }
 .ms-login button{
-	height:50px;
-	margin-top:60px;
-	border:1px solid #12a8a8;
-	font-size:22px;
-	color:#a6cbcb;
-	cursor:pointer;
-	background:#12a8a8;
+	    height: 50px;
+    margin-top: 40px;
+    border: 1px solid #12a8a8;
+    font-size: 22px;
+    color: #fff;
+    cursor: pointer;
+    background: #16c7c7;
 }
 .ms-login button:hover{
 	border:1px solid #16c7c7;
@@ -106,7 +99,7 @@ background:url(../../../public/_module/images/yw-bg.png) no-repeat center top #1
 .ms-nav{
 	width:648px;
 	height:218px;
-	margin:92px auto 20px auto;
+	margin:75px auto 36px auto;
 	overflow:hidden;
 }
 .ms-nav li{
@@ -164,3 +157,8 @@ input:-webkit-autofill {
 input{
    background-color:transparent !important;
 } 
+.ant-form-explain {
+    color: #ff5757;
+    font-size: 16px;
+    margin-top: 12px;
+}

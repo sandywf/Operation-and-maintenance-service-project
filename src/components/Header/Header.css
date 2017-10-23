@@ -3,21 +3,25 @@
   text-decoration: underline;
 }
 .header{
-	background: rgba(25,55,96,1);
-  height: 60px;
-  line-height: 60px;
+background: #193760;
+    height: 50px;
+    line-height: 50px;
+    margin: 0 auto;
+    width: 1920px;
+    box-shadow: 1px 0 0 #0e151f;
 }
+
 .logo{
    height: 32px;
      width: 180px;
    float: left;
-   margin: 10px 78px 16px 0;
+   margin: 10px 78px 16px 20px;
 }
 .menu-nav{float:left;}
 .menu-nav .ant-tabs{position: static;}
-.menu-nav .ant-tabs-content{position: absolute;top: 60px;left: 0;}
+.menu-nav .ant-tabs-content{position: absolute;top: 50px;left: 0;}
 
-.menu-nav .ant-tabs-tabpane a{margin-left:10px;margin-right:30px;}
+.menu-nav .ant-tabs-tabpane a{margin-left:15px;margin-right:30px;}
 .menu-nav .ant-tabs-bar{border-bottom: none;}
 .menu-nav .ant-tabs-ink-bar-animated{background-color:#193760;}
 .menu-nav .ant-tabs{margin-top:10px;}
@@ -33,7 +37,7 @@
 /* //header yw-
 //重置header组件样式 */
 .menu-nav .ant-tabs-bar,.menu-nav .ant-tabs-nav-container {
-    height: 50px;
+    height: 40px;
     margin-bottom:0;
 }
 .header .iconfont {
@@ -44,7 +48,7 @@
     color: #00d6d6;
 }
 .menu-nav .ant-tabs-nav .ant-tabs-tab {
-    height: 50px;
+    height: 40px;
     margin-right:30px;
     color:#c4c4c4;
 }
@@ -69,7 +73,6 @@
 }
 .log-out{
     float:right;
-    line-height: 60px;
     color: #fff;
 }
 .header .log-out i{
@@ -80,12 +83,14 @@
 }
 
 /* //二级导航条 */
-.header .ant-tabs-content{
+.header .ant-tabs:not(.ant-tabs-vertical) > .ant-tabs-content{
     position: absolute;
+    width:100%;
+    margin:0 auto;
 }
+
 .menu-nav .ant-tabs-content, .menu-nav .ant-tabs-tabpane {
-    
-    box-shadow: 0 2px 3px #e3e3e3;
+   box-shadow: 2px 0 3px #d5d5d5;
 }
 .menu-nav .ant-tabs-tabpane a{
     display: inline-block;
@@ -108,7 +113,7 @@
 .menu-nav .ant-tabs-nav-container .ant-tabs-nav-wrap{
     margin-bottom:0;
 }
-
+.header .menu-nav .ant-tabs-nav-container{line-height:20px;}
 .head-warp{
       width: 1920px;
     padding: 0 30px;

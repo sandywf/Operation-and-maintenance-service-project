@@ -1,95 +1,45 @@
-const listData = {
-    "data": [{
-  key: '1',
-  cClient:'10.1.1.1',
-  cDmc:'天津DMC',
-  cDms:'天津DMS',
-  cFlow:'天津流',
-  cIp:'1.1.23.4',
-  flowTime:'2016-12-12 09:12:34',
-  clientTime:'2016-12-12 09:12:34',
-  cResolve:'1920*1080',
-  cRate:'23',
-  dFlow:'1.4Mbps',
-  cArea:'江苏-苏州',
-  packet:'3%',
-}, {
-  key: '2',
-  cClient:'10.1.1.1',
-  cDmc:'好DMC',
-  cDms:'天津DMS',
-  cFlow:'北京流',
-  cIp:'2.7.23.4',
-  flowTime:'2016-12-12 09:12:34',
-  clientTime:'2016-12-12 09:12:34',
-  cResolve:'1900*1080',
-  cRate:'17',
-  dFlow:'8.4Mbps',
-  cArea:'江苏-苏州',
-  packet:'3%',
-}, {
-  key: '3',
-  cClient:'10.1.1.1',
-  cDmc:'苏州DMC',
-  cDms:'天津DMS',
-  cFlow:'苏州流',
-  cIp:'1.3.23.4',
-  flowTime:'2016-12-12 09:12:34',
-  clientTime:'2016-12-12 09:12:34',
-  cResolve:'1920*1080',
-  cRate:'77',
-  dFlow:'4.4Mbps',
-  cArea:'江苏-苏州',
-  packet:'34%',
-}]
-}
 
-const freshMenu = {
-    "data2": [{
-          key: '1',
-          name: '胡彦斌',
-          age: 32,
-        }, {
-          key: '2',
-          name: '胡彦祖',
-          age: 42,
-    }]
-}
+import HTTPUtil from '../../../utils/request';
+import { Modal } from 'antd';
 // ------------------------------------
 // Constants
 // ------------------------------------
 export const COUNTER_INCREMENT = 'COUNTER_INCREMENT'
-export const COUNTER_MENU = 'COUNTER_MENU'
+
 // ------------------------------------
 // Actions
 // ------------------------------------
-
-export const getKHData = () => {
+export const getKHData = (params = { curPage: 1, pageSize: 10,ip:'',sortsType:'',dmcTag:'',dmsTag:'',streamName:'',sortsKey:''}) => {
     return (dispatch, getState) => {
-        return fetch("https://api.github.com/users/suncn").then(response => {
-            dispatch({
-                type: COUNTER_INCREMENT,
-                payload: listData
-            })
-        })
+        let formData = new FormData();  
+            params.ip && formData.append("ip",params.ip); 
+            formData.append("dmcTag",params.dmcTag);  
+            formData.append("dmsTag",params.dmsTag); 
+            params.streamName && formData.append("streamName",params.streamName); 
+            formData.append("orderColumn",params.sortsKey); 
+            formData.append("orderAsc",params.sortsType); 
+            formData.append("curPage",params.curPage); 
+            formData.append("pageSize",params.pageSize);
+        return HTTPUtil.post('/stream/subscription/list',formData).then((res) => { 
+                //处理 请求success   
+                if(res){
+                    res = res.result;
+                    dispatch({
+                        type: COUNTER_INCREMENT,
+                        res
+                    }) 
+                }
+        },(res)=>{
+             //TODO 处理请求fail     
+        }) 
     }
 }
 
 
-export const getMENUData = () => {
-    return (dispatch, getState) => {
-        return fetch("https://api.github.com/users/suncn").then(response => {
-            dispatch({
-                type: COUNTER_MENU,
-                payload: freshMenu
-            })
-        })
-    }
-}
+
 
 export const actions = {
   getKHData,
-  getMENUData
 }
 
 // ------------------------------------
@@ -97,12 +47,16 @@ export const actions = {
 // ------------------------------------
 const ACTION_HANDLERS = {
   [COUNTER_INCREMENT]: (state, action) => {
-    state = Object.assign(state, action.payload)
-    return Object.create(state);
-  },
-  [COUNTER_MENU]: (state, action) => {
-    state = Object.assign(state, action.payload)
-    return Object.create(state);
+    if(action.res){
+        return {
+            data:action.res.data,
+            pageCur:action.res.curPage,
+            pageDatas:action.res.totalDatas,
+            pages:action.res.totalPages
+        };
+    }else{
+        return state;
+    }
   }
 }
 
@@ -111,6 +65,10 @@ const ACTION_HANDLERS = {
 // ------------------------------------
 const initialState = {
     data: [],
+    pageCur:'',
+    pageDatas:'',
+    data2:[],
+    pages:''
 }
 export default function counterReducer(state = initialState, action) {
     const handler = ACTION_HANDLERS[action.type]

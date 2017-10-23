@@ -2,8 +2,8 @@
 .zoom{margin-left:5px;}
 .s-item>div{display: inline-block;}
 .s-item lable{width: 80px;text-align: right;display: inline-block;}
-#root .ant-calendar-picker-input{width:290px;line-height: 23px;}
-.zoom>span{padding: 6px 15px;border-radius: 5px;}
+
+.zoom>span{padding: 6px 15px;border-radius: 5px;cursor: pointer;}
 .parent{background-color: rgba(243, 243, 243, 0.43);border: 1px solid #ececec;}
 .parent .ant-tabs-content{background: #fff;box-shadow: 0 0 10px #e3e3e3;padding-top: 20px;}
 
@@ -11,3 +11,10 @@
     color: #fff;}
 .noneDms{opacity: 0;}
 .showDms{opacity: 1;}
+#search_Chart .name-dms{display: flex;padding-left: 60px;height: 32px;}
+#search_Chart .name-dms .tip{margin-top:8px;}
+#elapse .ant-tabs-content{padding-bottom:20px;}
+#search_Chart input.stream-input{width:200px;}
+#search_Chart .name-dms .ant-form-item,#search_Chart .name-dms .ant-form-item-control-wrapper{display: inline-block;}
+.showBtn,a.showBtn:hover {color:#ccc;}
+#elapse{width:100%;height:100%}

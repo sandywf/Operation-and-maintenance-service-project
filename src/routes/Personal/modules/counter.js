@@ -1,9 +1,8 @@
 import HTTPUtil from '../../../utils/request';
-import utils from '../../../utils/utils';
+import { Modal } from 'antd';
 // ------------------------------------
 // Constants
 // ------------------------------------
-let headers = {'token':utils.wToken};
 
 export const PERSON_INFO = 'PERSON_INFO'
 export const UPDATE_PWD = 'UPDATE_PWD'
@@ -13,18 +12,16 @@ export const UPDATE_PWD = 'UPDATE_PWD'
 // 获取用户信息
 export function person () {
   return (dispatch, getState) => {
-    return HTTPUtil.post(utils.host+'/user/info/get','',headers).then((res) => {  
-        //处理 请求success  
-        if(res.status === '000000000' ){  
-            dispatch({
-                type:PERSON_INFO,
-                res
-            })
-        }else{  
-                //处理自定义异常  
-            alert(res.message);
-        }  
-       },(res)=>{
+    return HTTPUtil.post('/user/info/get','').then((res) => {  
+      if(res){
+          res = res.result;
+          //处理 请求success  
+          dispatch({
+              type:PERSON_INFO,
+              res
+          }) 
+      }      
+    },(res)=>{
          //TODO 处理请求fail     
     }) 
   }
@@ -36,17 +33,16 @@ export const updatePwd = ({current,data,userId})=>{
   formData.append("password",current.password); 
   formData.append("userId",userId); 
   return (dispatch, getState) => {
-    return HTTPUtil.post('http://10.5.224.23:8181/MaintenanceSystem/user/password/modify',formData,headers).then((res) => {  
+    return HTTPUtil.post('/user/password/modify',formData).then((res) => {  
+      if(res){
+        Modal.success({content:res.message});
         //处理 请求success  
-        if(res.status === '000000000' ){  
-            dispatch({
-                type:UPDATE_PWD,
-                data
-            })
-        }else{  
-                //处理自定义异常  
-            alert(res.message);
-        }  
+        dispatch({
+          type:UPDATE_PWD,
+          data
+        })
+      }
+        // Modal.success({content:res.message});  
        },(res)=>{
          //TODO 处理请求fail     
     }) 
@@ -63,7 +59,7 @@ export const actions = {
 // ------------------------------------
 const ACTION_HANDLERS = {
   [PERSON_INFO] : (state, action) => {
-    return {data:action.res.result};
+    return {data:action.res};
   },
   [UPDATE_PWD] : (state, action) => {
     return {data:action.data};

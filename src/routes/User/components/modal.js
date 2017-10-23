@@ -11,11 +11,17 @@ const options = [
   { label: '用户列表', value: '1' },
   { label: '流媒体服务', value: '2'}
 ];
+
 class Umodal extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { pwd: '',userDiv :''}
+    this.state = {pwd:this.props.password}
   }
+  // componentWillReceiveProps(nextProps) {
+  //   if (this.props.password !== nextProps.password) {
+  //     this.setState({pwd:nextProps.password});
+  //   }         
+  // }
   handleOk = (e,userId) => {
       e.preventDefault();
       this.props.form.validateFields((errors) => {
@@ -28,18 +34,26 @@ class Umodal extends React.Component {
               this.props.doModify({current,data,userId});
           }
           this.props.show();
-         // this.setState({pwd:'666666'});
       });
   }
   randomPwd = () =>{
-    let pwdNum = '';
-    for (let i=0;i<6;i++) pwdNum+=Math.floor(Math.random()*10);
-    this.setState({pwd:pwdNum});
+    var pwdNum = '';
+    var arr = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','0','1','2','3','4','5','6','7','8','9'];
+    for(var i = 0 ; i < 6 ; i ++ ){
+      pwdNum += ''+arr[Math.floor(Math.random() * arr.length)];
+    }
+    this.props.pwdEdit(pwdNum);
+    this.props.form.setFieldsValue({
+      password: pwdNum,
+    });
+  }
+  onChangePwd=(e)=>{
+    this.props.pwdEdit(e.target.value);
   }
  render(){
-    const { getFieldDecorator } = this.props.form;
+    const { getFieldDecorator,setFieldsValue } = this.props.form;
   return (
-    this.props.setVisible && <Modal className="user-md" visible={this.props.setVisible} title={this.props.title} data= {this.props.data} current= {this.props.current} onOk={(e)=>this.handleOk(e,this.props.userId)}  onCancel={this.props.del}>
+    this.props.setVisible && <Modal className="user-md" key={this.props.newKey} pwdEdit={this.props.pwdEdit} visible={this.props.setVisible} title={this.props.title} data= {this.props.data} current= {this.props.current} onOk={(e)=>this.handleOk(e,this.props.userId)}  onCancel={this.props.del}>
       <Form layout="horizontal"  id="user-modal" onSubmit={this.handleOk}>
         <FormItem label='用户名：' hasFeedback {...formItemLayout}>
           {getFieldDecorator('username',{
@@ -58,13 +72,13 @@ class Umodal extends React.Component {
                 message: '用户名格式不正确'
               }
             ]
-          })(<Input />)}
+          })(<Input disabled={this.props.current.modalType == 'modify' && 'false'} />)}
         </FormItem>
         <FormItem label='密码：' hasFeedback {...formItemLayout}>
           <Row gutter={8}>
             <Col span={12}>
              {getFieldDecorator('password', {
-                initialValue:this.state.pwd || "666666",
+                initialValue:this.props.password || '',
                 rules: [
                   {
                     required: true,
@@ -79,10 +93,10 @@ class Umodal extends React.Component {
                     message: '密码格式不正确'
                   }
                 ],
-             })(<Input size="large" />)}
+             })(<Input size="large" onChange={this.onChangePwd} />)}
              </Col>
             <Col span={12}>
-              <Button size="large" onClick={this.randomPwd}>随机密码</Button>
+              <Button size="large" onClick={()=>this.randomPwd()}>随机密码</Button>
             </Col>
           </Row>
         </FormItem>
