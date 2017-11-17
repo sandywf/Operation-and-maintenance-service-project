@@ -15,13 +15,8 @@ const options = [
 class Umodal extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {pwd:this.props.password}
+    this.state = {pwd:this.props.password,editPwd:true}
   }
-  // componentWillReceiveProps(nextProps) {
-  //   if (this.props.password !== nextProps.password) {
-  //     this.setState({pwd:nextProps.password});
-  //   }         
-  // }
   handleOk = (e,userId) => {
       e.preventDefault();
       this.props.form.validateFields((errors) => {
@@ -33,7 +28,6 @@ class Umodal extends React.Component {
           } else if (this.props.current.modalType == "modify") {
               this.props.doModify({current,data,userId});
           }
-          this.props.show();
       });
   }
   randomPwd = () =>{
@@ -48,6 +42,7 @@ class Umodal extends React.Component {
     });
   }
   onChangePwd=(e)=>{
+    this.setState({editPwd:false});
     this.props.pwdEdit(e.target.value);
   }
  render(){
@@ -78,8 +73,9 @@ class Umodal extends React.Component {
           <Row gutter={8}>
             <Col span={12}>
              {getFieldDecorator('password', {
-                initialValue:this.props.password || '',
-                rules: [
+                // initialValue:this.props.password || '',
+                initialValue: this.props.current.modalType == 'modify' ? '' : this.props.password,
+                rules:  this.state.editPwd ? [] : [
                   {
                     required: true,
                     message: '请输入密码'
@@ -107,6 +103,14 @@ class Umodal extends React.Component {
               {
                 required: true,
                 message: '请输入姓名'
+              },
+              {
+                pattern: /^[A-Za-z0-9\u4e00-\u9fa5]+$/,
+                message: '只能输入中文、字母、数字'
+              },
+              {
+                pattern: /^\S{1,10}$/,
+                message: '最多输入10位'
               },
             ],
           })(<Input max={10}/>)}

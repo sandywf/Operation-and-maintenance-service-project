@@ -21,7 +21,7 @@ class Modaldia extends React.Component {
             <Modal title="活跃流" key={this.props.newKey} visible={this.props.visible} onCancel={this.props.del} footer={null}>
                 <div id="active_flow">
                     {modalSource && modalSource.map((item,i)=>{
-                        return <a href="javascript:;" onClick={()=>this.jumpFlow('flow',item)} >
+                        return <a href="javascript:;" key={i} onClick={()=>this.jumpFlow('flow',item)} >
                                     {item}
                             </a>
                     })}

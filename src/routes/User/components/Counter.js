@@ -4,19 +4,18 @@ import './userlist.css';
 import Modalss from './modal';
 import Tableuser from './table';
 import FormatUtils from '../../../public/_module/js/common.js';
-
+const confirm = Modal.confirm;
 class EditableTable extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-          isVisible:false,
+          isVisible:this.props.visibleModal,
           title:'',
           current:[],
           data:[],
           userId:'',
           key:Math.random(),
           password:'666666',
-          status:false
         }
     }
   /*真实的DOM被渲染出来后调用*/
@@ -28,10 +27,14 @@ class EditableTable extends React.Component {
     if (this.props.data !== nextProps.data) {
       this.setState({data:nextProps.data});
     } 
+    if (this.props.visibleModal !== nextProps.visibleModal) {
+      this.setState({isVisible:nextProps.visibleModal});
+    } 
   }        
   addUser=()=>{
     let newKey = parseInt(3 * Math.random());
     this.setState({ key: newKey });
+    this.props.setVisible(true);
     this.setState({isVisible:true,title:"添加用户"});
     let current = {modalType:"add"};
     this.setState({current:current});
@@ -56,8 +59,15 @@ class EditableTable extends React.Component {
   }
   onDelete=(record,index)=>{
     let data = this.props.data;
-    this.props.doDelete({record,data});
-    this.setState({ userId:record.userId});
+    let _this = this;
+    confirm({
+      title: '确认删除?',
+      okText: '确定',
+      onOk() {
+        _this.props.doDelete({record,data});
+        _this.setState({ userId:record.userId});
+      }
+    });
   }
   handleCancel=()=>{
     this.setState({isVisible:false});
@@ -65,9 +75,8 @@ class EditableTable extends React.Component {
     this.props.getKHData();
   }
   fullScreen=(e)=>{
-    this.setState({status:!this.state.status});
     var elem = document.getElementById('user');   
-    FormatUtils.requestFullScreen(elem,this.state.status);
+    FormatUtils.requestFullScreen(elem);
   }
   pwdEdit=(value)=>{
     this.setState({password:value});
@@ -82,7 +91,7 @@ render(){
             <i>全屏</i>
             <button className="ms-userbtn" onClick={()=>this.addUser()}> 创建用户 </button>
 				</h4>
-				<Modalss password={this.state.password} pwdEdit={this.pwdEdit} newKey={this.state.key} userId = {this.state.userId} show={this.handleCancel} setVisible={this.state.isVisible} doAdd = {this.props.doAdd} doModify = {this.props.doModify} current= {this.state.current} data={this.state.data} title={this.state.title} del = {this.handleCancel} />
+				<Modalss password={this.state.password} pwdEdit={this.pwdEdit} newKey={this.state.key} userId = {this.state.userId} show={this.handleCancel} setVisible={this.state.isVisible ? this.state.isVisible : false} doAdd = {this.props.doAdd} doModify = {this.props.doModify} current= {this.state.current} data={this.state.data} title={this.state.title} del = {this.handleCancel} />
 		    <Tableuser dataSour={this.state.data} modify = {this.handleModify} deleteRow = {this.onDelete} />
 	  	</div>
 		);

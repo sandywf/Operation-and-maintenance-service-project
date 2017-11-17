@@ -16,7 +16,7 @@ class Search extends React.Component {
     }
     search (){
         if(this.props.dmcTag || this.props.dmsTag){
-            const params = {dmcTag:this.props.dmcTag,dmsTag:this.props.dmsTag,isSync:'',streamName:''};
+            const params = {dmcTag:this.props.dmcTag,dmsTag:this.props.dmsTag,isSync:this.props.isSync,streamName:''};
             this.props.valSearch(params);
         }
         if(this.props.streamName){
@@ -50,7 +50,7 @@ class Search extends React.Component {
                     </FormItem>
                     <DmsName dmcOption={this.dmcOption} dmsOption={this.dmsOption} dmcTag = {this.props.dmcTag} dmsTag = {this.props.dmsTag} />
                     <FormItem label="是否同步流">
-                        {getFieldDecorator('isSync',{initialValue: '',})(              
+                        {getFieldDecorator('isSync',{initialValue: (this.props.isSync ? this.props.isSync:'')})(              
                             <Select>
                                 <Option value=""></Option>
                                 <Option value="Y">同步</Option>

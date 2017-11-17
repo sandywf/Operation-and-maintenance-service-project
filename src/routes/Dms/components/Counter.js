@@ -285,7 +285,7 @@ class Counter extends React.Component {
                 dataIndex: 'serverNum',
                 key: 'serverNum',
                 width: 80,
-                render: (text,record) =><a href="javascript:;"  title={text} className="ellips width80" onClick={()=>this.showAddressModal(record.dmsTag)}>{text}</a>,
+                render: (text,record) => (text > 0) ? <a href="javascript:;"  title={text} className="ellips width80" onClick={()=>this.showAddressModal(record.dmsTag)}>{text}</a>:text,
                 sorter: true,
                 sortOrder: sortedInfo.columnKey === 'serverNum' && sortedInfo.order,
             },{
@@ -293,7 +293,7 @@ class Counter extends React.Component {
                 dataIndex: 'errorNum',
                 key: 'errorNum',
                 width: 80,
-                render:(text,record)=>(<a href="javascript:;"  title={text} className="ellips width80" onClick={()=>this.showErrorModal(record.dmsTag)}>{text}</a>),
+                render:(text,record)=> (text > 0) ? <a href="javascript:;"  title={text} className="ellips width80" onClick={()=>this.showErrorModal(record.dmsTag)}>{text}</a>:text,
                 sorter: true,
                 sortOrder: sortedInfo.columnKey === 'errorNum' && sortedInfo.order,
             },{
@@ -303,7 +303,7 @@ class Counter extends React.Component {
                 width:90,
                 sorter: true,
                 sortOrder: sortedInfo.columnKey === 'streamNum' && sortedInfo.order,
-                render:(text,record)=><a href="javascript:;" className="ellips width90" onClick={()=>this.jumpLink('flow',record.dmcTag,record.dmsTag)} >{text + ((record.syncStreamCnt) ? '(同步'+ (record.syncStreamCnt)+')' :'')}</a>,
+                render:(text,record)=> (text > 0) ? <a href="javascript:;" className="ellips width90" onClick={()=>this.jumpLink('flow',record.dmcTag,record.dmsTag)} >{text + ((record.syncStreamCnt) ? '(同步'+ (record.syncStreamCnt)+')' :'')}</a>:(text + ((record.syncStreamCnt) ? '(同步'+ (record.syncStreamCnt)+')' :'')),
             },{
                 title: '上行',
                 children: [{
@@ -319,7 +319,7 @@ class Counter extends React.Component {
                 width:80,
                 dataIndex: 'upAreaNum',
                 key: 'upAreaNum',
-                render: (text,record) =>(text > 0)?(<a href="javascript:;"  className="c-modle ellips width80" title={text} className="ellips width80" onClick={()=>this.showModal(record.dmsTag,derectUp)}>{text}</a>):{text},
+                render: (text,record) =>(text > 0)?(<a href="javascript:;"  className="c-modle ellips width80" title={text} className="ellips width80" onClick={()=>this.showModal(record.dmsTag,derectUp)}>{text}</a>):text,
                 sorter: true,
                 sortOrder: sortedInfo.columnKey === 'upAreaNum' && sortedInfo.order,
                 }], 
@@ -330,7 +330,7 @@ class Counter extends React.Component {
                     dataIndex: 'downClientNum',
                     key: 'downClientNum',
                     width:60,
-                    render: (text,record) => <a href="javascript:;" className="c-modle ellips width60" title={text} onClick={()=>this.jumpLink('zen',record.dmcTag,record.dmsTag)}>{text}</a>,
+                    render: (text,record) => (text > 0)?<a href="javascript:;" className="c-modle ellips width60" title={text} onClick={()=>this.jumpLink('zen',record.dmcTag,record.dmsTag)}>{text}</a>:text,
                     sorter: true,
                     sortOrder: sortedInfo.columnKey === 'downClientNum' && sortedInfo.order,
                 }, {
@@ -338,7 +338,7 @@ class Counter extends React.Component {
                     dataIndex: 'downIpNum',
                     key: 'downIpNum',
                     width:60,
-                    render: (text,record) => <a href="javascript:;"  className="c-modle ellips width60" title={text} onClick={()=>this.jumpLink('independentIp',record.dmcTag,record.dmsTag)}>{text}</a>,
+                    render: (text,record) => (text > 0)?<a href="javascript:;"  className="c-modle ellips width60" title={text} onClick={()=>this.jumpLink('independentIp',record.dmcTag,record.dmsTag)}>{text}</a>:text,
                     sorter: true,
                     sortOrder: sortedInfo.columnKey === 'downIpNum' && sortedInfo.order,
                 },{
@@ -354,7 +354,7 @@ class Counter extends React.Component {
                     width:80,
                     dataIndex: 'downAreaNum',
                     key: 'downAreaNum',
-                    render: (text,record) =>(text > 0)?(<a href="javascript:;"  className="c-modle ellips width80" title={text} onClick={()=>this.showModal(record.dmsTag,derectDown)}>{text}</a>):{text},
+                    render: (text,record) =>(text > 0)?(<a href="javascript:;"  className="c-modle ellips width80" title={text} onClick={()=>this.showModal(record.dmsTag,derectDown)}>{text}</a>):text,
                     sorter: true,
                     sortOrder: sortedInfo.columnKey === 'downAreaNum' && sortedInfo.order,
                 },{
@@ -373,7 +373,7 @@ class Counter extends React.Component {
             return (
                 <div id="dms">
                     <Topone title={this.state.titleName} name={this.state.name} />
-                    <Search valSearch={this.valSearch.bind(this)} dmcTag={(this.props.location.query.dmcTag) ? this.props.location.query.dmcTag :''} dmsName={(this.props.location.query.dmsName) ? this.props.location.query.dmsName :''} />
+                    <Search valSearch={this.valSearch.bind(this)} dmcTag={(this.props.location.query.dmcTag) ? this.props.location.query.dmcTag :''} dmsName={(this.props.location.query.dmsName) ? this.props.location.query.dmsName :''} isAlive={(this.props.location.query.activeStatus) ? this.props.location.query.activeStatus :''}/>
                     {<ReactInterval timeout={this.state.timeout} enabled={true} callback={()=>{this.handleChange();this.tick();}} />}
                     <Timebar itemNum={(pageDatas) ? pageDatas : 0} ref="getTime" handleMenuClick={this.handleMenuClick} timeName={this.state.timeName} newTime={this.state.newTime}/>
                     <Table rowKey={(record,key) => key} rowClassName={(record) => record.errorNum !== '0' ? 'error-color' : ''} columns={columns} dataSource={this.state.data} onChange={this.handleChange} pagination={pagination} />

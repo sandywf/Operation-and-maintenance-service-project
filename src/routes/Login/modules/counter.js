@@ -23,6 +23,15 @@ export const login = ({username,password})=>{
       return HTTPUtil.post('/user/login',formData,headers).then((json) => {  
         if(json){
           json = json.result;
+          var funcs = json.functions,funcsTag;
+          if(funcs.length == 2){
+            funcsTag='all';
+          }else if(funcs[0]['functionName'] == '用户列表'){
+            funcsTag='user';
+          }else{
+            funcsTag='flow';
+          }
+          localStorage.setItem('funcTag',funcsTag);
           localStorage.setItem('token',json.token);
           localStorage.setItem('realname',json.realname);
           localStorage.setItem('userType',json.userType);

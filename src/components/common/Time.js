@@ -12,6 +12,7 @@ class Timebar extends React.Component {
                   <Menu.Item key={300000}>5分钟</Menu.Item>
                   <Menu.Item key={600000}>10分钟</Menu.Item>
                   <Menu.Item key={3600000}>1小时</Menu.Item>
+                  <Menu.Item key={0}>立即刷新</Menu.Item>
                 </Menu>
         );
         return(

@@ -16,7 +16,7 @@ class Search extends React.Component {
     }
     search =()=>{
         if(this.props.dmcTag || this.props.dmsName){
-            const dmcTag = {dmcTag:this.props.dmcTag,dmsName:this.props.dmsName,isAlive:'',isOnline:'',serverType:''};
+            const dmcTag = {dmcTag:this.props.dmcTag,dmsName:this.props.dmsName,isAlive:this.props.isAlive,isOnline:'',serverType:''};
             this.props.valSearch(dmcTag);
         }
     }
@@ -56,7 +56,7 @@ class Search extends React.Component {
                         )}
                     </FormItem>
                     <FormItem label="活跃状态">
-                        {getFieldDecorator('isAlive',{initialValue: '',})(
+                        {getFieldDecorator('isAlive',{initialValue:(this.props.isAlive ? this.props.isAlive:'')})(
                             <Select>
                               <Option value=""></Option>
                               <Option value="Y">活跃</Option>

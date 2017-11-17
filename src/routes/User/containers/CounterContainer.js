@@ -8,7 +8,7 @@ const mapDispatchToProps = actions;
 const mapStateToProps = (state) => ({
     data: state.user.data,
     current: state.user.current,
-    isVisible:state.user.isVisible
+    visibleModal:state.user.isVisible
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Counter)

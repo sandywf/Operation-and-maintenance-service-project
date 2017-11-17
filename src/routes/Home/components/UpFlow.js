@@ -39,10 +39,13 @@ class Charts extends React.Component {
                 },
                 formatter: "{b}<br/>{a}:{c}"
             },
+            grid:{
+              x:60,
+              x2:80,
+            }, 
             xAxis: [
               {
                 type: "category",
-                name: "x",
                 splitLine: {show: false},
                 data: xData,
                 //axisLabel :{rotate:25,interval:0}  

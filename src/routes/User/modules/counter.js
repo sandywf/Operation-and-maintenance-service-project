@@ -17,14 +17,17 @@ export const IS_VISIBLE = 'IS_VISIBLE'
 export const getKHData = () => {
     return (dispatch, getState) => {
         return HTTPUtil.post('/user/list','').then((res) => {  
-            if(res.status=='000000000'){
-                res = res.result;
-                //处理 请求success  
-                dispatch({
-                    type: COUNTER_INCREMENT,
-                    res
-                })
+            if(res){
+                if(res.status=='000000000'){
+                    res = res.result;
+                    //处理 请求success  
+                    dispatch({
+                        type: COUNTER_INCREMENT,
+                        res
+                    })
+                }
             }
+           
         },(res)=>{
              //TODO 处理请求fail     
         }) 
@@ -40,18 +43,20 @@ export const doAdd = ({current,data})=>{
     formData.append("realname",current.realname); 
     formData.append("tel",current.tel);
     return (dispatch, getState) => {
-        return HTTPUtil.post('/user/add',formData).then((res) => {  
-                if(res){
-                    Modal.success({content:res.message});
-                    //处理 请求success  
-                    dispatch({
-                        type:DO_ADD,
-                        data
-                    });
-                    dispatch(getKHData());
-                }
-            },(res)=>{
-             //TODO 处理请求fail     
+        return HTTPUtil.postno('/user/add',formData).then((res) => {  
+            if(res.status=='100100001'){
+                Modal.error({content:res.message});
+                dispatch(setVisible(true));
+            }else{
+                Modal.success({content:res.message});
+                //处理 请求success  
+                dispatch({
+                    type:DO_ADD,
+                    data
+                });
+                dispatch(getKHData());
+                dispatch(setVisible(false));
+            }
         }) 
     }
 }
@@ -79,6 +84,7 @@ export const doModify = ({current,data,userId})=>{
                     data
                 });
                 dispatch(getKHData());
+                dispatch(setVisible(false));
              }
            },(res)=>{
              //TODO 处理请求fail     

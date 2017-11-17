@@ -95,19 +95,14 @@ class Counter extends React.Component {
         this.params = {ip:tagKey,upOrDown:direction}
         this.flowChange();
     }
-    flowChange = (pagination)=>{
-        let _this = this,pageParams={},filtersField={};
+    flowChange = ()=>{
+        let _this = this,filtersField={};
         if(_this.params === undefined || _this.params === ''){
             filtersField={ip:'',upOrDown:''};
           }else{
             Object.assign(filtersField, _this.params);
           }
-        if(pagination){
-            pageParams = { curPage: pagination.current, pageSize: pagination.pageSize };
-        }else{
-            pageParams = { curPage: 1, pageSize: 10 };
-        }
-        const areaParams = Object.assign({}, pageParams,filtersField);
+        const areaParams = Object.assign({},filtersField);
         this.props.getFlowData(areaParams); 
     }
     jumpLink=(link,dmc)=>{
@@ -220,7 +215,7 @@ class Counter extends React.Component {
                 title: '活跃流数量',
                 dataIndex: 'publishActiveNum',
                 key: 'publishActiveNum',
-                render:(text,record)=>(<span className="c-modle" onClick={()=>this.showModal(record.ip,'up')}>{text}</span>),
+                render:(text,record)=>(text > 0)?<span className="c-modle" onClick={()=>this.showModal(record.ip,'up')}>{text}</span>:text,
                 sorter:true,
                 sortOrder: sortedInfo.columnKey === 'publishActiveNum' && sortedInfo.order,
             },{
@@ -239,7 +234,7 @@ class Counter extends React.Component {
               title: '活跃流数量',
               dataIndex: 'subscriptionActionNum',
             key: 'subscriptionActionNum',
-              render:(text,record)=>(<span className="c-modle" onClick={()=>this.showModal(record.ip,'down')}>{text}</span>),
+              render:(text,record)=>(text > 0)?<span className="c-modle" onClick={()=>this.showModal(record.ip,'down')}>{text}</span>:text,
               sorter:true,
               sortOrder: sortedInfo.columnKey === 'subscriptionActionNum' && sortedInfo.order,
         }, {
@@ -247,7 +242,7 @@ class Counter extends React.Component {
             dataIndex: 'subscriptionNum',
             key: 'subscriptionNum',
             width: 90,
-            render: (text,record) => <a href="javascript:;" title={text} className="ellips width90" onClick={()=>this.jumpIp('zen',record.ip)}>{text}</a>,
+            render: (text,record) => (text > 0)?<a href="javascript:;" title={text} className="ellips width90" onClick={()=>this.jumpIp('zen',record.ip)}>{text}</a>:text,
             sorter:true,
             sortOrder: sortedInfo.columnKey === 'subscriptionNum' && sortedInfo.order,
         },{
@@ -275,7 +270,7 @@ class Counter extends React.Component {
                 <Search valSearch={this.valSearch.bind(this)} dmcName={(this.props.location.query.dmcName) ? this.props.location.query.dmcName :''} dmcTag={(this.props.location.query.dmcTag) ? this.props.location.query.dmcTag :''} dmsTag={(this.props.location.query.dmsTag) ? this.props.location.query.dmsTag :''} ip={(this.props.location.query.ip) ? this.props.location.query.ip :''}  streamName={(this.props.location.query.streamName) ? this.props.location.query.streamName :''} />
                 <ReactInterval timeout={this.state.timeout} enabled={true} callback={()=>{this.handleChange();this.tick();}} />
                 <Timebar itemNum={(pageDatas) ? pageDatas : 0} ref="getTime" handleMenuClick={this.handleMenuClick} timeName={this.state.timeName} newTime={this.state.newTime}/>
-                <Table columns={columns} dataSource={this.state.data} onChange={this.handleChange} pagination={pagination} />
+                <Table rowKey={(record,key) => key} columns={columns} dataSource={this.state.data} onChange={this.handleChange} pagination={pagination} />
                 <Modaldia newKey={this.state.key} visible={this.state.isVisible} modalSource={this.state.flowData} del = {()=>this.modalCancel()} />
             </div>
         );

@@ -20,12 +20,14 @@ export const getDMCData = (params = { curPage: 1, pageSize: 20,activeStatus:'',d
             formData.append("curPage",params.curPage); 
             formData.append("pageSize",params.pageSize);
         return HTTPUtil.post('/dmc/dmc-list',formData).then((res) => {  
+            if(res){
                 res = res.result;
-            //处理 请求success  
+                //处理 请求success  
                 dispatch({
                     type: DMC_LIST_TYPE,
                     res
                 }) 
+            }
         },(res)=>{
              //TODO 处理请求fail     
         }) 
@@ -40,12 +42,14 @@ export const getDMCArea = (areaParams = { curPage: 1, pageSize: 10,upOrDown:'',d
             formData.append("curPage",areaParams.curPage); 
             formData.append("pageSize",areaParams.pageSize);
         return HTTPUtil.post('/dmc/areal-distribution',formData).then((res) => {  
+            if(res){
                 res = res.result;
-            //处理 请求success  
+                //处理 请求success  
                 dispatch({
                     type: DMC_AREA,
                     res
                 }) 
+            }
         },(res)=>{
              //TODO 处理请求fail     
         }) 

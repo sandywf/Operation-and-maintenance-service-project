@@ -39,10 +39,11 @@ class Tableuser extends React.Component {
               var data=record.operations.map((item,i)=>{
                   return (   
                     <div className="opt-user" key={i}>
+                    {/* <Popconfirm title="确定删除该用户吗?" onConfirm={()=>this.props.deleteRow(record,index)}>
+                    <a href="javascript:void(0);">删除</a>
+                    </Popconfirm> :'' */}
                       {item =='modify' ? <a href="javascript:void(0);" onClick={()=>this.props.modify(record)} >编辑</a> :''}            
-                      {item =='delete' ?  <Popconfirm title="确定删除?" onConfirm={()=>this.props.deleteRow(record,index)}>
-                      <a href="javascript:void(0);">删除</a>
-                      </Popconfirm> :''}
+                      {item =='delete' ? <a href="javascript:void(0);" onClick={()=>this.props.deleteRow(record,index)} >删除</a>:''}
                     </div>
                   )
               });
@@ -50,8 +51,9 @@ class Tableuser extends React.Component {
             }
         }];
         return (
-          this.props.dataSour && <Table rowKey={(record,key) => record.userId} dataSource={this.props.dataSour} columns={columns} pagination={false} />
-          
+          <div>
+            {this.props.dataSour && <Table rowKey={(record,key) => record.userId} dataSource={this.props.dataSour} columns={columns} pagination={false} />}
+          </div>
         );
   }
 };

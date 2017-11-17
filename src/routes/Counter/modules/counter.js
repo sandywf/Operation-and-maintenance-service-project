@@ -37,13 +37,11 @@ export const getKHData = (params = { curPage: 1, pageSize: 20,dmcTag:'',dmsTag:'
     }
 }
 // ip列表上下行活跃流信息
-export const getFlowData = (params = { curPage: 1, pageSize: 10,ip:'',upOrDown:'down'}) => {
+export const getFlowData = (params = {ip:'',upOrDown:'down'}) => {
     return (dispatch, getState) => {
         let formData = new FormData();  
-            formData.append("dmcTag",params.upOrDown); 
+            formData.append("upOrDown",params.upOrDown); 
             formData.append("ip",params.ip);  
-            formData.append("curPage",params.curPage); 
-            formData.append("pageSize",params.pageSize);
         return HTTPUtil.post('/stream/ip/stream-name',formData).then((res) => {  
              if(res){
                 res = res.result;

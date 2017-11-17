@@ -9,7 +9,7 @@ class Search extends React.Component {
     }
     search (){
         if(this.props.dmcName){
-            const params = {dmcName:this.props.dmcName,activeStatus:''};
+            const params = {dmcName:this.props.dmcName,activeStatus:this.props.activeStatus};
             this.props.valSearch(params);
         }
     }
@@ -30,7 +30,7 @@ class Search extends React.Component {
 						{getFieldDecorator('dmcName',{initialValue:(this.props.dmcName ? this.props.dmcName:'')})(<Input  type="text" />)}
          			</FormItem>
          			<FormItem label="活跃状态">
-         			    {getFieldDecorator('activeStatus',{ initialValue: ''})(
+         			    {getFieldDecorator('activeStatus',{ initialValue:(this.props.activeStatus ? this.props.activeStatus:'')})(
          				   <Select>
          				       <Option value=""></Option>
          				       <Option value="Y">活跃</Option>

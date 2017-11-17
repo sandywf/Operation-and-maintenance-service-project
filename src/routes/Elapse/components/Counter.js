@@ -23,17 +23,10 @@ class Counter extends React.Component {
         }
     }
     componentWillReceiveProps(nextProps){ 
-        // if (this.props.dmsData !== nextProps.dmsData) {
-        //     this.setState({dmsData:nextProps.dmsData});
-        // }
         if (this.props.flowData !== nextProps.flowData) {
             this.setState({flowData:nextProps.flowData});
         }
     }
-    // valSearch =(searchContent) =>{
-    //   this.filter = searchContent;
-    //   this.handleChange();
-    // }
     render() {
       const { dmsData ,flowData} = this.props;
       return (

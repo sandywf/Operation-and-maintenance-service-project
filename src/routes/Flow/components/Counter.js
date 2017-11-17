@@ -141,14 +141,14 @@ class Counter extends React.Component {
     const params = Object.assign({}, pageParams,filtersField);
     this.props.getSyncData(params); 
   }
-  jumpLink=(link,dmc)=>{
-      appHistory.push({
-          pathname: link,
-          query: {
-              dmcTag:dmc,
-          },
-      })
-  }
+//   jumpLink=(link,dmc)=>{
+//       appHistory.push({
+//           pathname: link,
+//           query: {
+//               dmcTag:dmc,
+//           },
+//       })
+//   }
   jumpDmc=(link,dmc)=>{
     appHistory.push({
         pathname: link,
@@ -302,14 +302,14 @@ class Counter extends React.Component {
           width:140,
           dataIndex: 'subClientNum',
           key: 'subClientNum',
-          render: (text,record) => <a href="javascript:;" title={text} className="ellips width140" onClick={()=>this.jumpFlow('zen',record.streamName)}>{text}</a>,
+          render: (text,record) => (text > 0)?<a href="javascript:;" title={text} className="ellips width140" onClick={()=>this.jumpFlow('zen',record.streamName)}>{text}</a>:text,
           sorter: true,
           sortOrder: sortedInfo.columnKey === 'subClientNum' && sortedInfo.order,
         }, {
             title: '独立IP',
             dataIndex: 'subIpNum',
             key: 'subIpNum',
-            render: (text,record) => <a href="javascript:;" onClick={()=>this.jumpFlow('independentIp',record.streamName)}>{text}</a>,
+            render: (text,record) =>  (text > 0)?<a href="javascript:;" onClick={()=>this.jumpFlow('independentIp',record.streamName)}>{text}</a>:text,
             sorter: true,
             sortOrder: sortedInfo.columnKey === 'subIpNum' && sortedInfo.order,
         },{
@@ -325,7 +325,7 @@ class Counter extends React.Component {
             width:80,
             dataIndex: 'subAreaNum',
             key: 'subAreaNum',
-            render: (text,record) =><a href="javascript:;" title={text} className="ellips width80" onClick={()=>this.showModal(record.streamName)}>{text}</a>,
+            render: (text,record) => (text > 0)?<a href="javascript:;" title={text} className="ellips width80" onClick={()=>this.showModal(record.streamName)}>{text}</a>:text,
             sorter: true,
             sortOrder: sortedInfo.columnKey === 'subAreaNum' && sortedInfo.order,
         },{
@@ -349,7 +349,7 @@ class Counter extends React.Component {
                 title: '同步路数',
                  dataIndex: 'syncNum',
                  key: 'syncNum',
-                  render: (text,record) =><a href="javascript:;" onClick={()=>this.syncModal(record.streamName)}>{text}</a>,
+                  render: (text,record) => (text > 0)?<a href="javascript:;" onClick={()=>this.syncModal(record.streamName)}>{text}</a>:text,
                  sorter: true,
                  sortOrder: sortedInfo.columnKey === 'syncNum' && sortedInfo.order,
               },{
@@ -373,7 +373,7 @@ class Counter extends React.Component {
         return (
             <div id="flow">
                 <Topone title={this.state.titleName} name={this.state.name} />
-                <Search valSearch={this.valSearch.bind(this)} dmcTag={(this.props.location.query.dmcTag) ? this.props.location.query.dmcTag :''} dmsTag={(this.props.location.query.dmsTag) ? this.props.location.query.dmsTag :''} streamName={(this.props.location.query.streamName) ? this.props.location.query.streamName :''} />
+                <Search valSearch={this.valSearch.bind(this)} dmcTag={(this.props.location.query.dmcTag) ? this.props.location.query.dmcTag :''} dmsTag={(this.props.location.query.dmsTag) ? this.props.location.query.dmsTag :''} streamName={(this.props.location.query.streamName) ? this.props.location.query.streamName :''} isSync={(this.props.location.query.isSync) ? this.props.location.query.isSync :''}/>
                 <ReactInterval timeout={this.state.timeout} enabled={true} callback={()=>{this.handleChange();this.tick();}} />
                 <Timebar itemNum={(pageDatas) ? pageDatas : 0} ref="getTime" handleMenuClick={this.handleMenuClick} timeName={this.state.timeName} newTime={this.state.newTime}/>
                 <Table rowKey={(record,key)=>key} columns={columns} dataSource={this.state.data} onChange={this.handleChange} pagination={pagination} />

@@ -11,37 +11,51 @@ import { Tabs } from 'antd'
 import Logo from '../../public/_module/images/main-logo.png'
 import HTTPUtil from '../../utils/request';
 const TabPane = Tabs.TabPane
-var userItem = []
-
+var userItem = [],userShow='disabled',flowShow='disabled',activeTag='0';
 function callback(key) {
-  
+  key == '0' && appHistory.push('/');
+  key == '5' && appHistory.push('/user');
 };
 function eidtPwd(){
   HTTPUtil.post('/user/loginout','').then((json) => {  
     //处理 请求success  
-      localStorage.clear('token')
-      appHistory.push('/login') 
+      localStorage.clear();
+      appHistory.push('/login');
     },(json)=>{
      //TODO 处理请求fail  
   })  
 }
 class Header extends React.Component {
   componentWillMount(){
-    if(localStorage.getItem('userType')==='normal_user'){
-      userItem = [
-        {path: "/personal", name: "个人资料"},
-      ]
-    }else{
-      userItem = [
-        {path: "/user", name: "用户列表"},
-        {path: "/personal", name: "个人资料"},
-      ]
-    }
+      if(localStorage.getItem('userType')==='normal_user'){
+        userItem = [
+          {path: "/personal", name: "个人资料"},
+        ]
+      }else{
+        userItem = [
+          {path: "/user", name: "用户列表"},
+          {path: "/personal", name: "个人资料"},
+        ]
+      }
+      if(localStorage.getItem('funcTag') == 'all'){
+        userShow='';
+        flowShow='';
+        activeTag='0';
+      }else if(localStorage.getItem('funcTag') == 'user'){
+        userShow='';
+        flowShow='disabled';
+        activeTag='0';
+        appHistory.push('/user');
+      }else{
+        flowShow='';
+        userShow='disabled';
+        activeTag='4';
+      }
   }
   render(){
     const tabs=[
     {
-      show:'',
+      show:flowShow,
       icon:'iconfont icon-Streaming-Server',
       name:'流媒体服务器',
       Children:[
@@ -80,7 +94,7 @@ class Header extends React.Component {
       Children:[
     ]},
     {
-      show:'',
+      show:userShow,
       icon:'iconfont icon-allocation',
       name:'配置',
       Children:userItem
@@ -93,11 +107,11 @@ class Header extends React.Component {
        <img alt='logo' src={Logo} />
       </div>
       <div className="menu-nav">
-         <Tabs defaultActiveKey="0" onChange={callback}>
+         <Tabs onChange={callback}>
           {tabs.map((item,i)=>{
-            return <TabPane defaultActiveKey="0"  disabled={item.show} tab={ <span><i className={item.icon}></i> {item.name}</span> } key={i}>
+            return <TabPane defaultActiveKey={activeTag} disabled={item.show} tab={ <span><i className={item.icon}></i> {item.name}</span> } key={i}>
               {item.Children.map(function(item,index){
-                return <IndexLink  key={index} to={item.path} activeClassName='route--active'>
+                return <IndexLink key={index} to={item.path} activeClassName='route--active'>
                           {item.name}
                         </IndexLink >
               })}

@@ -2,11 +2,10 @@ import React from 'react';
 import { Table,Dropdown,Input,Modal,Button,Select } from 'antd';
 const { Column, ColumnGroup } = Table;
 import FormatUtils from '../../public/_module/js/common.js';
-var status=false;
+
 const fullScreen=(name)=>{
-    status=!status;
     var elem = document.getElementById(name);   
-    FormatUtils.requestFullScreen(elem,status);
+    FormatUtils.requestFullScreen(elem);
 };
 const Topone = (props)=>
     <h4 className="ms-overall">

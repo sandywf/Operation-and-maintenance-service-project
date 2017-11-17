@@ -25,11 +25,13 @@ class UP extends React.Component {
                 },
                 formatter: "{b}<br/>{a}:{c}"
             },
-           
+            grid:{
+                x:80,
+                x2:60,
+            }, 
             xAxis: [
               {
                 type: "category",
-                name: "x",
                 splitLine: {show: false},
                 data: xData,
                 axisLabel :{rotate:25,interval:0}  

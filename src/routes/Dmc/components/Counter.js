@@ -153,7 +153,7 @@ class Counter extends React.Component {
             dataIndex: 'dmsCnt',
             key: 'dmsCnt',
             width: 150,
-            render:(text,record)=> <a href="javascript:;" className="ellips width150" onClick={()=>this.jumpLink('dms',record.dmcTag)} >{text + ((record.activeDmsCnt) ? '(活跃'+ (record.activeDmsCnt)+')' :'')}</a>,
+            render:(text,record)=> (text > 0)?<a href="javascript:;" className="ellips width150" onClick={()=>this.jumpLink('dms',record.dmcTag)} >{text + ((record.activeDmsCnt) ? '(活跃'+ (record.activeDmsCnt)+')' :'')}</a>: text,
             sorter: true,
             sortOrder: sortedInfo.columnKey === 'dmsCnt' && sortedInfo.order,
         }, {
@@ -161,7 +161,7 @@ class Counter extends React.Component {
             dataIndex: 'streamCnt',
             key: 'streamCnt',
             width: 150,
-            render:(text,record)=><a href="javascript:;" title={text} className="ellips width150" onClick={()=>this.jumpLink('flow',record.dmcTag)} >{text + ((record.syncStreamCnt) ? '(同步'+ (record.syncStreamCnt)+')' :'')}</a>,
+            render:(text,record)=> (text > 0)?<a href="javascript:;" title={text} className="ellips width150" onClick={()=>this.jumpLink('flow',record.dmcTag)} >{text + ((record.syncStreamCnt) ? '(同步'+ (record.syncStreamCnt)+')' :'')}</a> : text,
             sorter: true,
             sortOrder: sortedInfo.columnKey === 'streamCnt' && sortedInfo.order,
         }, {
@@ -179,7 +179,7 @@ class Counter extends React.Component {
                 width: 80,
                 dataIndex: 'upAreaCnt',
                 key: 'upAreaCnt',
-                render: (text,record) =>(text > 0)?<a href="javascript:;"  className="c-modle" title={text} className="ellips width80" onClick={()=>this.showModal(record.dmcTag,'up')}>{text}</a>:(text),
+                render: (text,record) =>(text > 0)?<a href="javascript:;"  className="c-modle" title={text} className="ellips width80" onClick={()=>this.showModal(record.dmcTag,'up')}>{text}</a>: text,
                 sorter: true,
                 sortOrder: sortedInfo.columnKey === 'upAreaCnt' && sortedInfo.order,
             }],
@@ -190,7 +190,7 @@ class Counter extends React.Component {
                 dataIndex: 'subscriptionCnt',
                 key: 'subscriptionCnt',
                 width:140,
-                render: (text,record) => <a href="javascript:;" title={text} className="ellips width140" onClick={()=>this.jumpLink('zen',record.dmcTag)}>{text}</a>,
+                render: (text,record) =>(text > 0) ? <a href="javascript:;" title={text} className="ellips width140" onClick={()=>this.jumpLink('zen',record.dmcTag)}>{text}</a>:text,
                 sorter:true,
                 sortOrder: sortedInfo.columnKey === 'subscriptionCnt' && sortedInfo.order,
             }, {
@@ -198,7 +198,7 @@ class Counter extends React.Component {
                 dataIndex: 'ipCnt',
                 key: 'ipCnt',
                 width:200,
-                render: (text,record) => <a href="javascript:;" title={text} className="ellips width200" onClick={()=>this.jumpLink('independentIp',record.dmcTag)}>{text}</a>,
+                render: (text,record) => (text > 0) ? <a href="javascript:;" title={text} className="ellips width200" onClick={()=>this.jumpLink('independentIp',record.dmcTag)}>{text}</a>:text,
                 sorter: true,
                 sortOrder: sortedInfo.columnKey === 'ipCnt' && sortedInfo.order,
             }, {
@@ -214,7 +214,7 @@ class Counter extends React.Component {
                 width: 80,
                 dataIndex: 'downAreaCnt',
                 key: 'downAreaCnt',
-                render: (text,record) =>(<a href="javascript:;" className="c-modle" title={text} className="ellips width80" onClick={()=>this.showModal(record.dmcTag,'down')}>{text}</a>),
+                render: (text,record) => (text > 0) ? <a href="javascript:;" className="c-modle" title={text} className="ellips width80" onClick={()=>this.showModal(record.dmcTag,'down')}>{text}</a>:text,
                 sorter: true,
                 sortOrder: sortedInfo.columnKey === 'downAreaCnt' && sortedInfo.order,
             }, {
@@ -236,7 +236,7 @@ class Counter extends React.Component {
         return (
             <div id="dmc">
                 <Topone title={this.state.titleName} name={this.state.name} />
-                <Search valSearch={this.valSearch.bind(this)} dmcTag={(this.props.location.query.dmcTag) ? this.props.location.query.dmcTag :''} dmcName={(this.props.location.query.dmcName) ? this.props.location.query.dmcName :''} dmsTag={(this.props.location.query.dmsTag) ? this.props.location.query.dmsTag :''} />
+                <Search valSearch={this.valSearch.bind(this)} dmcTag={(this.props.location.query.dmcTag) ? this.props.location.query.dmcTag :''} dmcName={(this.props.location.query.dmcName) ? this.props.location.query.dmcName :''} dmsTag={(this.props.location.query.dmsTag) ? this.props.location.query.dmsTag :''} activeStatus={(this.props.location.query.activeStatus) ? this.props.location.query.activeStatus :''}/>
                 <ReactInterval timeout={this.state.timeout} enabled={true} callback={()=>{this.handleChange();this.tick();}} />
                 <Timebar itemNum={(pageDatas) ? pageDatas : 0} ref="getTime" handleMenuClick={this.handleMenuClick} timeName={this.state.timeName} newTime={this.state.newTime}/>
                 <Table columns={columns} rowKey={(record,key) => key} dataSource={this.state.data} onChange={this.handleChange} pagination={pagination} />

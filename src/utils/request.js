@@ -114,5 +114,26 @@ HTTPUtil.post = function(url, formData,headers) {
         })  
   })  
 }  
-
+HTTPUtil.postno = function(url, formData,headers) {  
+    if(headers){
+        headers ={};
+    }else{
+        headers = getAuth();
+    }
+  return new Promise(function (resolve, reject) {  
+    fetch(BASE_URL + url, {  
+          method: 'POST',  
+          headers:headers,
+          body:formData,  
+        })
+        .then((response) => response.json())
+        .then((response)=>{return response;})
+        .then((response) => {  
+            resolve(response);  
+        })  
+        .catch((err)=> {  
+          reject({status:-1});  
+        })  
+  })  
+}  
 export default HTTPUtil;  

@@ -46,13 +46,14 @@ class DmcSelect extends React.Component {
             //处理 请求success  
             if(json){
                 this.setState({dmsList:json.result});
-                this.setState({dmsdefault:this.props.dmsTag});
-            }
-            if(json.result === undefined || json.result.length == 0){
-                this.setState({visibile:false});
-                this.setState({dmsdefault:''});
-                const dmsValue = '';
-                this.props.dmsOption(dmsValue);
+                if(json.result === undefined || json.result.length == 0){
+                    this.setState({visibile:false});
+                    this.setState({dmsdefault:''});
+                    const dmsValue = '';
+                    this.props.dmsOption(dmsValue);
+                }else{  
+                    // this.setState({dmsdefault:this.props.dmsTag});
+                }
             }
         },(json)=>{
          //TODO 处理请求fail  
@@ -64,6 +65,7 @@ class DmcSelect extends React.Component {
         if(value==''){
             this.setState({visibile:false});
             this.setState({dmsdefault:''});
+            this.props.dmsOption('');
         }else{
             this.setState({visibile:true});
             this.getDms(params);

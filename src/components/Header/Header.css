@@ -3,11 +3,12 @@
   text-decoration: underline;
 }
 .header{
-background: #193760;
+    background: #193760;
     height: 50px;
     line-height: 50px;
     margin: 0 auto;
-    width: 1920px;
+    min-width: 1920px;
+    width: 100%;
     box-shadow: 1px 0 0 #0e151f;
 }
 
@@ -85,7 +86,7 @@ background: #193760;
 /* //二级导航条 */
 .header .ant-tabs:not(.ant-tabs-vertical) > .ant-tabs-content{
     position: absolute;
-    width:100%;
+
     margin:0 auto;
 }
 

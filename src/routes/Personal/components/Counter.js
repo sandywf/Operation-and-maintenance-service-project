@@ -10,7 +10,6 @@ class Personal extends React.Component {
 			modalVisible:false,
 			data:this.props.data,
 			key:1,
-			status:false
         }
     }
 	   /*真实的DOM被渲染出来后调用*/
@@ -34,9 +33,8 @@ class Personal extends React.Component {
 	}
 
 	fullScreen=(e)=>{
-		this.setState({status:!this.state.status});
 		var elem = document.getElementById('personal');   
-		FormatUtils.requestFullScreen(elem,this.state.status);
+		FormatUtils.requestFullScreen(elem);
 	}
   	render() {
   		return (
@@ -53,7 +51,7 @@ class Personal extends React.Component {
 						<li><label>邮箱：</label><span>{this.props.data.email}</span> </li>
 						<li><label>手机：</label><span>{this.props.data.tel}</span> </li>
 						<li><label>密码：</label>
-							<span></span>
+							<span>******</span>
 							<Button onClick={this.editPwd}>修改密码</Button> </li>
 					</ul>
 				</div>
