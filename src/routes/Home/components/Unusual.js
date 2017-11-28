@@ -17,8 +17,12 @@ class Unusual extends React.Component {
 		all:'unusual'
 	}
 	handleMenuClick =(e)=>{
-		this.setState({timeName: e.domEvent.currentTarget.innerHTML});
-		this.setState({timeout:parseInt(e.key)});
+		if(parseInt(e.key)=='0'){
+			this.props.getUnusual();this.tick();
+		}else{
+			this.setState({timeName: e.domEvent.currentTarget.innerHTML});
+			this.setState({timeout:parseInt(e.key)});
+		}
 	}
 	tick() {
 			this.setState({newTime:moment().format('YYYY-MM-DD HH:mm')});

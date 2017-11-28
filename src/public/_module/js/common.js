@@ -3,8 +3,8 @@ import React from 'react';
 class FormatUtils{
   requestFullScreen(element) {  
       function checkFull(){
+            // var elevenFull = document.body.scrollHeight==window.screen.height&&document.body.scrollWidth==window.screen.width;
             var isFull =  document.fullscreenEnabled || window.fullScreen || document.webkitIsFullScreen || document.msFullscreenEnabled;
-            //to fix : false || undefined == undefined
             if(isFull === undefined) isFull = false;
             return isFull;
         }

@@ -10,6 +10,7 @@ export const SHOW_MODAL = 'SHOW_MODAL'
 export const DO_ADD = 'DO_ADD'
 export const DO_MODIFY = 'DO_MODIFY'
 export const IS_VISIBLE = 'IS_VISIBLE'
+export const EDIT_PWD = 'EDIT_PWD'
 // ------------------------------------
 // Actions
 // ------------------------------------
@@ -85,6 +86,7 @@ export const doModify = ({current,data,userId})=>{
                 });
                 dispatch(getKHData());
                 dispatch(setVisible(false));
+                dispatch(actionPwd(false));
              }
            },(res)=>{
              //TODO 处理请求fail     
@@ -115,7 +117,7 @@ export const doDelete = ({record,data})=>{
 
 //弹窗处理逻辑
 export const showModal = ({current,data})=>{
-    
+
     if(current.modalType == "add"){
         const temp = {};
         temp.title = current.title;
@@ -142,13 +144,21 @@ export const setVisible = (isVisible)=>{
         isVisible
     }
 }
+//是否对密码验证
+export const actionPwd = (apwd)=>{
+    return{
+        type:"EDIT_PWD",
+        apwd
+    }
+}
 export const actions = {
   getKHData,
   doDelete,
   showModal,
   doAdd,
   doModify,
-  setVisible
+  setVisible,
+  actionPwd
 }
 // ------------------------------------
 // Action Handlers
@@ -172,6 +182,9 @@ const ACTION_HANDLERS = {
   },
   [IS_VISIBLE]: (state, action) => {
     return {isVisible:action.isVisible};
+  },
+  [EDIT_PWD]: (state, action) => {
+    return {apwd:action.apwd};
   }
 }
 
@@ -182,7 +195,8 @@ const ACTION_HANDLERS = {
 const initialState = {
     data: [],
     current:[],
-    isVisible:false
+    isVisible:false,
+    apwd:false
 }
 export default function counterReducer(state = initialState, action) {
     const handler = ACTION_HANDLERS[action.type]

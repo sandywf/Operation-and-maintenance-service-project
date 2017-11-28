@@ -19,8 +19,13 @@ class OverAll extends React.Component {
 		all:'all'
 	}
 	handleMenuClick =(e)=>{
-		this.setState({timeName: e.domEvent.currentTarget.innerHTML});
-		this.setState({timeout:parseInt(e.key)});
+		if(parseInt(e.key)=='0'){
+			this.props.getOverall();this.tick();
+		}else{
+			this.props.getOverall();this.tick();
+			this.setState({timeName: e.domEvent.currentTarget.innerHTML});
+			this.setState({timeout:parseInt(e.key)});
+		}
 	}
 	tick() {
 			this.setState({newTime:moment().format('YYYY-MM-DD HH:mm')});

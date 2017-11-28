@@ -85,7 +85,7 @@ class Search extends React.Component {
             streamName:(this.props.streamName ? this.props.streamName : ''),
             dmcOption: (this.props.dmcTag ? this.props.dmcTag : ''),
             dmsOption:(this.props.dmsTag ? this.props.dmsTag : ''),
-            rightBtn:false
+            rightBtn:false,
         };
     }
     componentDidMount(){
@@ -107,14 +107,16 @@ class Search extends React.Component {
         this.searchParms();
     }
     searchParms(){
-        let _this = this,endTime = moment(moment(), 'YYYY-MM-DD HH:mm:ss'),zoomValue=this.state.zoomValue,dmcParams={},streamParams={};
+        let _this = this,endTime = moment(moment(), 'YYYY-MM-DD HH:mm:ss'),zoomValue=this.state.zoomValue,dmcParams={},dotParam={dotNum: 13,xAxisTimeFormat:'YYYY-MM-dd HH:mm'},streamParams={};
         if(_this.lineTime ){
             endTime=_this.lineTime;
         }
         const zoomTime = {endTime:moment(endTime).format('x')};
-        const secParams = {dotNum: 13,xAxisTimeFormat:'YYYY-MM-dd HH:mm'};
         if(_this.zmVal){
             zoomValue = _this.zmVal;
+        }
+        if(_this.dotParam){
+            dotParam = _this.dotParam;
         }
         if(_this.dmcparams){
             Object.assign(dmcParams, _this.dmcparams);
@@ -127,24 +129,9 @@ class Search extends React.Component {
             Object.assign(dmcParams, {dmsTag:this.props.dmsTag});
         }
         streamParams={streamName:this.state.streamName}
-        const params = Object.assign({},streamParams,dmcParams,zoomValue, zoomTime,secParams);
+        const params = Object.assign({},streamParams,dmcParams,zoomValue, zoomTime,dotParam);
         this.props.getElapse(params);
     }
-    // disabledStartDate = (startValue) => {
-    //     const endValue = this.state.endValue;
-    //     if (!startValue || !endValue) {
-    //       return false;
-    //     }
-    //     return startValue.valueOf() > endValue.valueOf();
-    //   }
-    
-    //   disabledEndDate = (endValue) => {
-    //     const startValue = this.state.startValue;
-    //     if (!endValue || !startValue) {
-    //       return false;
-    //     }
-    //     return endValue.valueOf() > startValue.valueOf();
-    //   }  
       onStartChange = (value) => {
        this.setState({startValue:value});
         const keyValue = this.state.zoomValue;
@@ -177,6 +164,10 @@ class Search extends React.Component {
         this.setState({ endOpen: open });
       }
     changeTime(key,keyValue) { 
+        this.props.changeRotate(key);
+        if(key == '1'){
+            this.dotParam={dotNum: 6,xAxisTimeFormat:'YYYY-MM-dd HH:mm:ss'};
+        }
         this.setState({active: key});
         this.setState({zoomValue: keyValue});
         if(key !== '0'){

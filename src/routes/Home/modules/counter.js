@@ -49,7 +49,7 @@ export const getUnusual = (pageParams = { curPage: 1, pageSize: 10}) => {
     }
 }
 //获取折线图数据
-export const getFlow = (params = { dotNum:13,timeNum:5,timeUnit:'MINUTE',xAxisTimeFormat:'HH:mm',endTime:moment().format('x')}) => {
+export const getFlow = (params = { dotNum:6,timeNum:5,timeUnit:'MINUTE',xAxisTimeFormat:'HH:mm:ss',endTime:moment().format('x')}) => {
     return (dispatch, getState) => {
         let formData = new FormData();  
         formData.append("dotNum",params.dotNum); 
@@ -81,7 +81,7 @@ export const getFlow = (params = { dotNum:13,timeNum:5,timeUnit:'MINUTE',xAxisTi
 }
 //获取下行折线图
 //获取折线图数据
-export const getDownFlow = (params = { dotNum:13,timeNum:5,timeUnit:'MINUTE',xAxisTimeFormat:'HH:mm',endTime:moment().format('x')}) => {
+export const getDownFlow = (params = { dotNum:6,timeNum:5,timeUnit:'MINUTE',xAxisTimeFormat:'HH:mm:ss',endTime:moment().format('x')}) => {
     return (dispatch, getState) => {
         let formData = new FormData();  
         formData.append("dotNum",params.dotNum); 

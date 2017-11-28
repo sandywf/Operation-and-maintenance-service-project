@@ -40,16 +40,22 @@ class Header extends React.Component {
       if(localStorage.getItem('funcTag') == 'all'){
         userShow='';
         flowShow='';
-        activeTag='0';
+        // if((location.hash).includes('user')){
+        //   activeTag='4';
+        // }else if((location.hash).includes('personal')){
+        //   activeTag='5';
+        // }else if(){
+
+        // }
       }else if(localStorage.getItem('funcTag') == 'user'){
         userShow='';
         flowShow='disabled';
-        activeTag='0';
-        appHistory.push('/user');
+        // activeTag='0';
+        // appHistory.push('/user');
       }else{
         flowShow='';
         userShow='disabled';
-        activeTag='4';
+        // activeTag='4';
       }
   }
   render(){
@@ -109,7 +115,7 @@ class Header extends React.Component {
       <div className="menu-nav">
          <Tabs onChange={callback}>
           {tabs.map((item,i)=>{
-            return <TabPane defaultActiveKey={activeTag} disabled={item.show} tab={ <span><i className={item.icon}></i> {item.name}</span> } key={i}>
+            return <TabPane defaultActiveKey={0} disabled={item.show} tab={ <span><i className={item.icon}></i> {item.name}</span> } key={i}>
               {item.Children.map(function(item,index){
                 return <IndexLink key={index} to={item.path} activeClassName='route--active'>
                           {item.name}

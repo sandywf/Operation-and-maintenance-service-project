@@ -35,8 +35,12 @@ class Counter extends React.Component {
         this.timeoutId = '';
     }
     handleMenuClick =(e)=>{
-        this.setState({timeName: e.domEvent.currentTarget.innerHTML});
-        this.setState({timeout:parseInt(e.key)});
+        if(parseInt(e.key)=='0'){
+			this.handleChange();this.tick();
+		}else{
+			this.setState({timeName: e.domEvent.currentTarget.innerHTML});
+			this.setState({timeout:parseInt(e.key)});
+		}
     }
     tick() {
         this.setState({newTime:moment().format('YYYY-MM-DD HH:mm')});
@@ -179,7 +183,7 @@ class Counter extends React.Component {
                 width: 80,
                 dataIndex: 'upAreaCnt',
                 key: 'upAreaCnt',
-                render: (text,record) =>(text > 0)?<a href="javascript:;"  className="c-modle" title={text} className="ellips width80" onClick={()=>this.showModal(record.dmcTag,'up')}>{text}</a>: text,
+                render: (text,record) =>(text > 0)?<a href="javascript:;"  title={text} className="c-modle ellips width80" onClick={()=>this.showModal(record.dmcTag,'up')}>{text}</a>: <span title={text} className="ellips width80">{text}</span>,
                 sorter: true,
                 sortOrder: sortedInfo.columnKey === 'upAreaCnt' && sortedInfo.order,
             }],
@@ -190,7 +194,7 @@ class Counter extends React.Component {
                 dataIndex: 'subscriptionCnt',
                 key: 'subscriptionCnt',
                 width:140,
-                render: (text,record) =>(text > 0) ? <a href="javascript:;" title={text} className="ellips width140" onClick={()=>this.jumpLink('zen',record.dmcTag)}>{text}</a>:text,
+                render: (text,record) =>(text > 0) ? <a href="javascript:;" title={text} className="ellips width140" onClick={()=>this.jumpLink('zen',record.dmcTag)}>{text}</a>:<span title={text} className="ellips width140">{text}</span>,
                 sorter:true,
                 sortOrder: sortedInfo.columnKey === 'subscriptionCnt' && sortedInfo.order,
             }, {
@@ -198,7 +202,7 @@ class Counter extends React.Component {
                 dataIndex: 'ipCnt',
                 key: 'ipCnt',
                 width:200,
-                render: (text,record) => (text > 0) ? <a href="javascript:;" title={text} className="ellips width200" onClick={()=>this.jumpLink('independentIp',record.dmcTag)}>{text}</a>:text,
+                render: (text,record) => (text > 0) ? <a href="javascript:;" title={text} className="ellips width200" onClick={()=>this.jumpLink('independentIp',record.dmcTag)}>{text}</a>:<span title={text} className="ellips width200">{text}</span>,
                 sorter: true,
                 sortOrder: sortedInfo.columnKey === 'ipCnt' && sortedInfo.order,
             }, {
@@ -214,7 +218,7 @@ class Counter extends React.Component {
                 width: 80,
                 dataIndex: 'downAreaCnt',
                 key: 'downAreaCnt',
-                render: (text,record) => (text > 0) ? <a href="javascript:;" className="c-modle" title={text} className="ellips width80" onClick={()=>this.showModal(record.dmcTag,'down')}>{text}</a>:text,
+                render: (text,record) => (text > 0) ? <a href="javascript:;" title={text} className="ellips width80" onClick={()=>this.showModal(record.dmcTag,'down')}>{text}</a>:<span title={text} className="ellips width80">{text}</span>,
                 sorter: true,
                 sortOrder: sortedInfo.columnKey === 'downAreaCnt' && sortedInfo.order,
             }, {

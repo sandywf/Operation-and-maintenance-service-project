@@ -3,7 +3,7 @@ import { Select } from 'antd';
 import HTTPUtil from '../../utils/request';
 
 const Option = Select.Option;
-
+var  nameList = [];
 class DmcName extends React.Component {
     state={
         nameList : []
@@ -12,7 +12,8 @@ class DmcName extends React.Component {
         HTTPUtil.get('/dmc/all-dmc/get','',HTTPUtil.headers).then((json) => {  
                 //处理 请求success  
                 if(json){
-                    this.setState({nameList:json.result})
+                    // this.setState({nameList:json.result})
+                    nameList = json.result;
                 }
             },(json)=>{
              //TODO 处理请求fail  
@@ -26,7 +27,7 @@ class DmcName extends React.Component {
         return(
             <Select onChange={this.handleChange} defaultValue={dmcTag}>
                 <Option value=""></Option>
-                {(this.state.nameList) ? this.state.nameList.map((item,index) =>[<Option key={index} value={item.dmcTag}>{item.dmcName}</Option>]) : ''}
+                {(nameList) ? nameList.map((item,index) =>[<Option key={index} value={item.dmcTag}>{item.dmcName}</Option>]) : ''}
             </Select>
         )
     }

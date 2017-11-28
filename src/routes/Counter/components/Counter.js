@@ -15,26 +15,26 @@ const appHistory = routerHistory(createHashHistory)({queryKey:false});
 const { Column, ColumnGroup } = Table;
 const Option = Select.Option;
 class Counter extends React.Component {
-    state = {
-        filteredInfo: null,
-        sortedInfo: null,
-        data:this.props.data,
-        flowData:this.props.flowData,
-        dataSource:this.props.data2,
-        pagination: {},
-        loading: false,
-        isVisible:false,
-        key:Math.random(),
-        titleName:'独立IP',
-        timeout:60000,
-		timeName:'1分钟',
-        newTime:moment().format('YYYY-MM-DD HH:mm'),
-        name:'indClient'
-    };
     constructor(props) {
         super(props);
         this.filter = '';
         this.timeoutId = '';
+        this.state={
+                filteredInfo: null,
+                sortedInfo: null,
+                data:this.props.data,
+                flowData:this.props.flowData,
+                dataSource:this.props.data2,
+                pagination: {},
+                loading: false,
+                isVisible:false,
+                key:Math.random(),
+                titleName:'独立IP',
+                timeout:60000,
+                timeName:'1分钟',
+                newTime:moment().format('YYYY-MM-DD HH:mm'),
+                name:'indClient'
+        };
     }
     /*真实的DOM被渲染出来后调用*/
     componentDidMount(){
@@ -52,8 +52,12 @@ class Counter extends React.Component {
         }    
     }
     handleMenuClick =(e)=>{
-        this.setState({timeName: e.domEvent.currentTarget.innerHTML});
-        this.setState({timeout:parseInt(e.key)});
+        if(parseInt(e.key)=='0'){
+            this.handleChange();this.tick();
+        }else{
+            this.setState({timeout:parseInt(e.key)});
+            this.setState({timeName: e.domEvent.currentTarget.innerHTML});
+        }
     }
     tick() {
         this.setState({newTime:moment().format('YYYY-MM-DD HH:mm')});
@@ -66,7 +70,7 @@ class Counter extends React.Component {
             pageParams = { curPage: 1, pageSize: 20 };
         }
         if(_this.filter === undefined || _this.filter === ''){
-          filtersField={dmcTag:'',ip:'',streamName:''};
+          filtersField={dmcTag:'',dmsTag:'',ip:'',streamName:''};
         }else{
           Object.assign(filtersField, _this.filter);
         }
@@ -199,10 +203,11 @@ class Counter extends React.Component {
             title: '活跃流',
             dataIndex: 'activeStreamNameSet',
             key: 'activeStreamNameSet',
+            width: 150,
             render: (text,record) => {
                 return(
                      record.activeStreamNameSet &&  record.activeStreamNameSet.map(function(value,index){
-                        return <a href="javascript:;" onClick={()=>self.jumpFlow('flow',value)}>
+                        return <a href="javascript:;" title={value} className="ellips width150" onClick={()=>self.jumpFlow('flow',value)}>
                                     {value}
                                 </a>
                     }) 
@@ -215,7 +220,8 @@ class Counter extends React.Component {
                 title: '活跃流数量',
                 dataIndex: 'publishActiveNum',
                 key: 'publishActiveNum',
-                render:(text,record)=>(text > 0)?<span className="c-modle" onClick={()=>this.showModal(record.ip,'up')}>{text}</span>:text,
+                width:130,
+                render:(text,record)=>(text > 0)?<span className="c-modle ellips width130" title={text} onClick={()=>this.showModal(record.ip,'up')}>{text}</span>:<span className="ellips width130">{text}</span>,
                 sorter:true,
                 sortOrder: sortedInfo.columnKey === 'publishActiveNum' && sortedInfo.order,
             },{
@@ -233,8 +239,9 @@ class Counter extends React.Component {
             children: [{
               title: '活跃流数量',
               dataIndex: 'subscriptionActionNum',
+              width:130,
             key: 'subscriptionActionNum',
-              render:(text,record)=>(text > 0)?<span className="c-modle" onClick={()=>this.showModal(record.ip,'down')}>{text}</span>:text,
+              render:(text,record)=>(text > 0)?<span className="c-modle ellips width130" onClick={()=>this.showModal(record.ip,'down')}>{text}</span>:<span className="ellips width130">{text}</span>,
               sorter:true,
               sortOrder: sortedInfo.columnKey === 'subscriptionActionNum' && sortedInfo.order,
         }, {
@@ -242,7 +249,7 @@ class Counter extends React.Component {
             dataIndex: 'subscriptionNum',
             key: 'subscriptionNum',
             width: 90,
-            render: (text,record) => (text > 0)?<a href="javascript:;" title={text} className="ellips width90" onClick={()=>this.jumpIp('zen',record.ip)}>{text}</a>:text,
+            render: (text,record) => (text > 0)?<a href="javascript:;" title={text} className="ellips width90" onClick={()=>this.jumpIp('zen',record.ip)}>{text}</a>:<span title={text} className="ellips width90">{text}</span>,
             sorter:true,
             sortOrder: sortedInfo.columnKey === 'subscriptionNum' && sortedInfo.order,
         },{

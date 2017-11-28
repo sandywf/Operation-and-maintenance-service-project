@@ -66,8 +66,12 @@ class Counter extends React.Component {
         } 
     }
     handleMenuClick =(e)=>{
-        this.setState({timeName: e.domEvent.currentTarget.innerHTML});
-        this.setState({timeout:parseInt(e.key)});
+        if(parseInt(e.key)=='0'){
+			this.handleChange();this.tick();
+		}else{
+			this.setState({timeName: e.domEvent.currentTarget.innerHTML});
+			this.setState({timeout:parseInt(e.key)});
+		}
     }
     tick() {
         this.setState({newTime:moment().format('YYYY-MM-DD HH:mm')});
@@ -285,7 +289,7 @@ class Counter extends React.Component {
                 dataIndex: 'serverNum',
                 key: 'serverNum',
                 width: 80,
-                render: (text,record) => (text > 0) ? <a href="javascript:;"  title={text} className="ellips width80" onClick={()=>this.showAddressModal(record.dmsTag)}>{text}</a>:text,
+                render: (text,record) => (text > 0) ? <a href="javascript:;"  title={text} className="ellips width80" onClick={()=>this.showAddressModal(record.dmsTag)}>{text}</a>:<span title={text} className="ellips width80">{text}</span>,
                 sorter: true,
                 sortOrder: sortedInfo.columnKey === 'serverNum' && sortedInfo.order,
             },{
@@ -293,7 +297,7 @@ class Counter extends React.Component {
                 dataIndex: 'errorNum',
                 key: 'errorNum',
                 width: 80,
-                render:(text,record)=> (text > 0) ? <a href="javascript:;"  title={text} className="ellips width80" onClick={()=>this.showErrorModal(record.dmsTag)}>{text}</a>:text,
+                render:(text,record)=> (text > 0) ? <a href="javascript:;"  title={text} className="ellips width80" onClick={()=>this.showErrorModal(record.dmsTag)}>{text}</a>:<span title={text} className="ellips width80">{text}</span>,
                 sorter: true,
                 sortOrder: sortedInfo.columnKey === 'errorNum' && sortedInfo.order,
             },{
@@ -319,7 +323,7 @@ class Counter extends React.Component {
                 width:80,
                 dataIndex: 'upAreaNum',
                 key: 'upAreaNum',
-                render: (text,record) =>(text > 0)?(<a href="javascript:;"  className="c-modle ellips width80" title={text} className="ellips width80" onClick={()=>this.showModal(record.dmsTag,derectUp)}>{text}</a>):text,
+                render: (text,record) =>(text > 0)?(<a href="javascript:;"  className="c-modle ellips width80" title={text} className="ellips width80" onClick={()=>this.showModal(record.dmsTag,derectUp)}>{text}</a>):<span title={text} className="ellips width80">{text}</span>,
                 sorter: true,
                 sortOrder: sortedInfo.columnKey === 'upAreaNum' && sortedInfo.order,
                 }], 
@@ -330,7 +334,7 @@ class Counter extends React.Component {
                     dataIndex: 'downClientNum',
                     key: 'downClientNum',
                     width:60,
-                    render: (text,record) => (text > 0)?<a href="javascript:;" className="c-modle ellips width60" title={text} onClick={()=>this.jumpLink('zen',record.dmcTag,record.dmsTag)}>{text}</a>:text,
+                    render: (text,record) => (text > 0)?<a href="javascript:;" className="c-modle ellips width60" title={text} onClick={()=>this.jumpLink('zen',record.dmcTag,record.dmsTag)}>{text}</a>:<span title={text} className="ellips width60">{text}</span>,
                     sorter: true,
                     sortOrder: sortedInfo.columnKey === 'downClientNum' && sortedInfo.order,
                 }, {
@@ -338,7 +342,7 @@ class Counter extends React.Component {
                     dataIndex: 'downIpNum',
                     key: 'downIpNum',
                     width:60,
-                    render: (text,record) => (text > 0)?<a href="javascript:;"  className="c-modle ellips width60" title={text} onClick={()=>this.jumpLink('independentIp',record.dmcTag,record.dmsTag)}>{text}</a>:text,
+                    render: (text,record) => (text > 0)?<a href="javascript:;"  className="c-modle ellips width60" title={text} onClick={()=>this.jumpLink('independentIp',record.dmcTag,record.dmsTag)}>{text}</a>:<span title={text} className="ellips width60">{text}</span>,
                     sorter: true,
                     sortOrder: sortedInfo.columnKey === 'downIpNum' && sortedInfo.order,
                 },{
@@ -354,7 +358,7 @@ class Counter extends React.Component {
                     width:80,
                     dataIndex: 'downAreaNum',
                     key: 'downAreaNum',
-                    render: (text,record) =>(text > 0)?(<a href="javascript:;"  className="c-modle ellips width80" title={text} onClick={()=>this.showModal(record.dmsTag,derectDown)}>{text}</a>):text,
+                    render: (text,record) =>(text > 0)?(<a href="javascript:;"  className="c-modle ellips width80" title={text} onClick={()=>this.showModal(record.dmsTag,derectDown)}>{text}</a>):<span title={text} className="ellips width80">{text}</span>,
                     sorter: true,
                     sortOrder: sortedInfo.columnKey === 'downAreaNum' && sortedInfo.order,
                 },{

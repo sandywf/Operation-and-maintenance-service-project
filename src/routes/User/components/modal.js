@@ -42,7 +42,7 @@ class Umodal extends React.Component {
     });
   }
   onChangePwd=(e)=>{
-    this.setState({editPwd:false});
+    // this.setState({editPwd:false});
     this.props.pwdEdit(e.target.value);
   }
  render(){
@@ -73,9 +73,8 @@ class Umodal extends React.Component {
           <Row gutter={8}>
             <Col span={12}>
              {getFieldDecorator('password', {
-                // initialValue:this.props.password || '',
                 initialValue: this.props.current.modalType == 'modify' ? '' : this.props.password,
-                rules:  this.state.editPwd ? [] : [
+                rules:  this.props.acPwd ? [
                   {
                     required: true,
                     message: '请输入密码'
@@ -88,7 +87,7 @@ class Umodal extends React.Component {
                     pattern: /^[,\.;~!@#\$%\^&\*\(\)\+-=\\\/<>\w]+$/,
                     message: '密码格式不正确'
                   }
-                ],
+                ] : [],
              })(<Input size="large" onChange={this.onChangePwd} />)}
              </Col>
             <Col span={12}>

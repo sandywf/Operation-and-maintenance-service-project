@@ -58,8 +58,12 @@ class Counter extends React.Component {
     } 
   }
   handleMenuClick =(e)=>{
-    this.setState({timeName: e.domEvent.currentTarget.innerHTML});
-    this.setState({timeout:parseInt(e.key)});
+    if(parseInt(e.key)=='0'){
+			this.handleChange();this.tick();
+		}else{
+			this.setState({timeName: e.domEvent.currentTarget.innerHTML});
+			this.setState({timeout:parseInt(e.key)});
+		}
   }
   tick() {
       this.setState({newTime:moment().format('YYYY-MM-DD HH:mm')});
@@ -291,7 +295,8 @@ class Counter extends React.Component {
             title: '区域',
             dataIndex: 'publishArea',
             key: 'publishArea',
-            render: text => <span>{text}</span>,
+            width:80,
+            render: text => <span title={text} className="ellips width80">{text}</span>,
             sorter: true,
             sortOrder: sortedInfo.columnKey === 'publishArea' && sortedInfo.order,
         }], 
@@ -302,14 +307,15 @@ class Counter extends React.Component {
           width:140,
           dataIndex: 'subClientNum',
           key: 'subClientNum',
-          render: (text,record) => (text > 0)?<a href="javascript:;" title={text} className="ellips width140" onClick={()=>this.jumpFlow('zen',record.streamName)}>{text}</a>:text,
+          render: (text,record) => (text > 0)?<a href="javascript:;" title={text} className="ellips width140" onClick={()=>this.jumpFlow('zen',record.streamName)}>{text}</a>:<span title={text} className="ellips width140">{text}</span>,
           sorter: true,
           sortOrder: sortedInfo.columnKey === 'subClientNum' && sortedInfo.order,
         }, {
             title: '独立IP',
             dataIndex: 'subIpNum',
             key: 'subIpNum',
-            render: (text,record) =>  (text > 0)?<a href="javascript:;" onClick={()=>this.jumpFlow('independentIp',record.streamName)}>{text}</a>:text,
+            width:60,
+            render: (text,record) =>  (text > 0)?<a href="javascript:;" title={text} className="ellips width60" onClick={()=>this.jumpFlow('independentIp',record.streamName)}>{text}</a>:<span title={text} className="ellips width60">{text}</span>,
             sorter: true,
             sortOrder: sortedInfo.columnKey === 'subIpNum' && sortedInfo.order,
         },{
@@ -325,7 +331,7 @@ class Counter extends React.Component {
             width:80,
             dataIndex: 'subAreaNum',
             key: 'subAreaNum',
-            render: (text,record) => (text > 0)?<a href="javascript:;" title={text} className="ellips width80" onClick={()=>this.showModal(record.streamName)}>{text}</a>:text,
+            render: (text,record) => (text > 0)?<a href="javascript:;" title={text} className="ellips width80" onClick={()=>this.showModal(record.streamName)}>{text}</a>:<span title={text} className="ellips width80">{text}</span>,
             sorter: true,
             sortOrder: sortedInfo.columnKey === 'subAreaNum' && sortedInfo.order,
         },{
@@ -349,7 +355,8 @@ class Counter extends React.Component {
                 title: '同步路数',
                  dataIndex: 'syncNum',
                  key: 'syncNum',
-                  render: (text,record) => (text > 0)?<a href="javascript:;" onClick={()=>this.syncModal(record.streamName)}>{text}</a>:text,
+                 width:80,
+                render: (text,record) => (text > 0)?<a href="javascript:;" title={text} className="ellips width80" onClick={()=>this.syncModal(record.streamName)}>{text}</a>:<span className="ellips width80">{text}</span>,
                  sorter: true,
                  sortOrder: sortedInfo.columnKey === 'syncNum' && sortedInfo.order,
               },{
@@ -362,7 +369,7 @@ class Counter extends React.Component {
                 sortOrder: sortedInfo.columnKey === 'syncFlow' && sortedInfo.order,
               },{
                 title: '丢包率',
-                width:64,
+                width:60,
                 dataIndex: 'syncDropRate',
                 key: 'syncDropRate',
                 render: text => <span title={text} className="ellips width60">{text}</span>,

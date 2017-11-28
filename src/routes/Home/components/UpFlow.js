@@ -40,7 +40,7 @@ class Charts extends React.Component {
                 formatter: "{b}<br/>{a}:{c}"
             },
             grid:{
-              x:60,
+              x:70,
               x2:80,
             }, 
             xAxis: [
@@ -74,19 +74,19 @@ class Charts extends React.Component {
     }
     handleMenuClick (e){
       timeTxt = e.domEvent.currentTarget.innerHTML;
-      let filtersField = {},filter={dotNum:13,xAxisTimeFormat:'HH:mm'},eTime={endTime:moment().format('x')};
+      let filtersField = {},eTime={endTime:moment().format('x')};
       switch(parseInt(e.key))
       {
         case 2:
-          filtersField = {timeNum:1,timeUnit:'HOUR'}
+          filtersField = {timeNum:1,timeUnit:'HOUR',dotNum:13,xAxisTimeFormat:'HH:mm'}
           break;
         case 3:
-          filtersField = {timeNum:1,timeUnit:'DAY'}
+          filtersField = {timeNum:1,timeUnit:'DAY',dotNum:13,xAxisTimeFormat:'HH:mm'}
           break;
         default:
-          filtersField = {timeNum:5,timeUnit:'MINUTE'}
+          filtersField = {timeNum:5,timeUnit:'MINUTE',dotNum:6,xAxisTimeFormat:'HH:mm:ss'}
       }
-      const params = Object.assign({},filtersField,filter,eTime);
+      const params = Object.assign({},filtersField,eTime);
       this.props.getFlow(params);
     }
     render() {  

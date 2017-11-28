@@ -43,8 +43,12 @@ class Counter extends React.Component {
           }    
     }
     handleMenuClick =(e)=>{
-        this.setState({timeName: e.domEvent.currentTarget.innerHTML});
-        this.setState({timeout:parseInt(e.key)});
+        if(parseInt(e.key)=='0'){
+			this.handleChange();this.tick();
+		}else{
+			this.setState({timeName: e.domEvent.currentTarget.innerHTML});
+			this.setState({timeout:parseInt(e.key)});
+		}
     }
     tick() {
         this.setState({newTime:moment().format('YYYY-MM-DD HH:mm')});
@@ -222,6 +226,8 @@ class Counter extends React.Component {
             title: '区域',
             dataIndex: 'areaName',
             key: 'areaName',
+            width:90,
+            render:(text)=><span title={text} className="ellips width90">{text}</span>,
             sorter:true,
             sortOrder: sortedInfo.columnKey === 'areaName' && sortedInfo.order,
         },{

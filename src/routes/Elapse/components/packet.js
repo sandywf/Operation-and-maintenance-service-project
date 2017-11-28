@@ -34,7 +34,7 @@ class Packet extends React.Component {
                 type: "category",
                 splitLine: {show: false},
                 data: xData,
-                axisLabel :{rotate:25,interval:0}  
+                axisLabel :{rotate:this.props.rotate,interval:0}  
               }
             ],
             yAxis: [

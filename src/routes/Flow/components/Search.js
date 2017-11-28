@@ -54,7 +54,7 @@ class Search extends React.Component {
                             <Select>
                                 <Option value=""></Option>
                                 <Option value="Y">同步</Option>
-                                <Option value="N">异步</Option>
+                                <Option value="N">上传</Option>
                             </Select>
                         )}
                     </FormItem>

@@ -31,7 +31,7 @@ export const getDms = (params = { dmcTag:''}) => {
   }
 }
 // 获取图表数据
-export const getElapse = (params = { dotNum: 13,xAxisTimeFormat:'YYYY-MM-dd HH:mm',timeUnit:'MINUTE',timeNum:5,endTime:moment().format('x')}) => {
+export const getElapse = (params = { dotNum: 6,xAxisTimeFormat:'YYYY-MM-dd HH:mm:ss',timeUnit:'MINUTE',timeNum:5,endTime:moment().format('x')}) => {
     return (dispatch, getState) => {
         let formData = new FormData();  
         formData.append("dotNum",params.dotNum); 

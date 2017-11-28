@@ -10,6 +10,7 @@ class EditableTable extends React.Component {
         super(props);
         this.state = {
           isVisible:this.props.visibleModal,
+          acPwd:this.props.pwd,
           title:'',
           current:[],
           data:[],
@@ -29,6 +30,9 @@ class EditableTable extends React.Component {
     } 
     if (this.props.visibleModal !== nextProps.visibleModal) {
       this.setState({isVisible:nextProps.visibleModal});
+    } 
+    if (this.props.pwd !== nextProps.pwd) {
+      this.setState({acPwd:nextProps.pwd});
     } 
   }        
   addUser=()=>{
@@ -79,6 +83,7 @@ class EditableTable extends React.Component {
     FormatUtils.requestFullScreen(elem);
   }
   pwdEdit=(value)=>{
+    this.props.actionPwd(true);
     this.setState({password:value});
   }
 render(){
@@ -91,7 +96,7 @@ render(){
             <i>全屏</i>
             <button className="ms-userbtn" onClick={()=>this.addUser()}> 创建用户 </button>
 				</h4>
-				<Modalss password={this.state.password} pwdEdit={this.pwdEdit} newKey={this.state.key} userId = {this.state.userId} show={this.handleCancel} setVisible={this.state.isVisible ? this.state.isVisible : false} doAdd = {this.props.doAdd} doModify = {this.props.doModify} current= {this.state.current} data={this.state.data} title={this.state.title} del = {this.handleCancel} />
+				<Modalss acPwd={this.state.acPwd ? this.state.acPwd:false} actionPwd={this.props.actionPwd} password={this.state.password} pwdEdit={this.pwdEdit} newKey={this.state.key} userId = {this.state.userId} show={this.handleCancel} setVisible={this.state.isVisible ? this.state.isVisible : false} doAdd = {this.props.doAdd} doModify = {this.props.doModify} current= {this.state.current} data={this.state.data} title={this.state.title} del = {this.handleCancel} />
 		    <Tableuser dataSour={this.state.data} modify = {this.handleModify} deleteRow = {this.onDelete} />
 	  	</div>
 		);
