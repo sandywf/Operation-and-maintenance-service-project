@@ -21,9 +21,6 @@
 	border:1px solid #108ee9;
 	background: #108ee9;
 }
-.ant-table-tbody a{
-	display:inline;
-}
 .ms-edit{
 	margin-right: 10px;
 }
@@ -35,9 +32,6 @@
 .ant-modal-title {
     font-size: 18px;
     font-weight: 100;
-}
-.ms-adduser{
-	
 }
 .ms-adduser li{
 	margin:20px 0;

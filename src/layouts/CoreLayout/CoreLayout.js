@@ -1,6 +1,6 @@
 import React from 'react'
 import Header from '../../components/Header'
-import Footer from '../../components/Footer'
+
 import '../../styles/core.scss'
 //样式文件
 import classes from './CoreLayout.scss'
@@ -21,7 +21,6 @@ class CoreLayout extends React.Component {
       </div>
     </div>
     <div className={classes["clear"]}></div>
-    <Footer />
   </div>
     )
   }

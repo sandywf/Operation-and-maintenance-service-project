@@ -20,7 +20,7 @@ class DmcSelect extends React.Component {
         this.getDmc();
         if(this.props.dmcTag){
             const params = {dmcTag:this.props.dmcTag};
-            this.getDms(params);
+            this.getDms(params,true);
         }
     }
     componentWillMount(){
@@ -39,20 +39,20 @@ class DmcSelect extends React.Component {
          //TODO 处理请求fail  
         }) ;
     }
-    getDms=(params)=>{
+    getDms=(params,tag)=>{
         let formData = new FormData();  
         formData.append("dmcTag",params.dmcTag); 
         HTTPUtil.post('/stream/dms/get',formData).then((json) => {  
             //处理 请求success  
             if(json){
-                this.setState({dmsList:json.result});
                 if(json.result === undefined || json.result.length == 0){
                     this.setState({visibile:false});
+                }else{
+                    this.setState({dmsList:json.result});
+                }
+                if(!tag){
                     this.setState({dmsdefault:''});
-                    const dmsValue = '';
-                    this.props.dmsOption(dmsValue);
-                }else{  
-                    // this.setState({dmsdefault:this.props.dmsTag});
+                    this.props.dmsOption('');
                 }
             }
         },(json)=>{
@@ -60,15 +60,14 @@ class DmcSelect extends React.Component {
         })  
     }
     changeOption=(value)=>{
-        this.setState({selectName:value});
+        this.setState({dmsdefault:''});
+        this.props.dmsOption('');
         const params = {dmcTag:value};
         if(value==''){
             this.setState({visibile:false});
-            this.setState({dmsdefault:''});
-            this.props.dmsOption('');
         }else{
             this.setState({visibile:true});
-            this.getDms(params);
+            this.getDms(params,false);
         }
         this.props.dmcOption(value);
     }
@@ -92,14 +91,15 @@ class DmcSelect extends React.Component {
                     </Select>
                                     )}
                 </FormItem>
-
                 {this.state.visibile ? 
-                <FormItem label="DMS名称"> 
-                    {getFieldDecorator('dms',{ initialValue: this.state.dmsdefault})(
-                    <Select onChange={this.dmsChange} >
-                        {(this.state.dmsList) ? this.state.dmsList.map((province,index) => <Option key={'dms' + index} value={province.dmsTag}>{province.dmsName}</Option>) : ''}
-                    </Select>)}
-                </FormItem> : ''}
+                    <FormItem label="DMS名称"> 
+                        {/* {getFieldDecorator('dms',{ initialValue:(this.state.dmsList.length > 0 ? this.state.dmsdefault :'')})( */}
+                        <Select onChange={this.dmsChange} value={this.state.dmsList.length > 0 ? this.state.dmsdefault :''}>
+                            {(this.state.dmsList) ? this.state.dmsList.map((province,index) => <Option key={'dms' + index} value={province.dmsTag}>{province.dmsName}</Option>) : ''}
+                        </Select>
+                        {/* )} */}
+                    </FormItem> 
+                : ''}
             </div>
         )
     }

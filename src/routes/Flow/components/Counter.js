@@ -1,5 +1,4 @@
 import React from 'react';
-import { ReactInterval } from 'react-interval';
 import moment from 'moment';
 import { Table,Input,Button,Select } from 'antd';
 import './flow.css';
@@ -44,6 +43,7 @@ class Counter extends React.Component {
     if(!this.props.location.search){
       this.props.getKHData();
     }
+    this.timerFun(60000);
   }
   /*组件接收到新的props时调用*/
   componentWillReceiveProps(nextProps){ 
@@ -57,13 +57,32 @@ class Counter extends React.Component {
       this.setState({syncData:nextProps.syncData});
     } 
   }
+  // 销毁定时器
+  componentWillUnmount(){
+    this.timer && clearTimeout(this.timer);
+  }
+  // 定时器的时间选择
   handleMenuClick =(e)=>{
-    if(parseInt(e.key)=='0'){
-			this.handleChange();this.tick();
-		}else{
-			this.setState({timeName: e.domEvent.currentTarget.innerHTML});
-			this.setState({timeout:parseInt(e.key)});
-		}
+      if(parseInt(e.key)=='0'){
+          this.setTime();
+          this.timerFun(60000);
+      }else{
+          this.setState({timeout:parseInt(e.key)});
+          this.setState({timeName: e.domEvent.currentTarget.innerHTML});
+          this.timerFun(parseInt(e.key));
+      }
+  }
+  // 定时器方法
+  timerFun=(time)=>{
+      this.timer && clearTimeout(this.timer);
+      this.timer = setInterval(() => {
+          this.setTime();
+      }, time)
+  }
+  // 定时器回调
+  setTime=()=>{
+      this.handleChange();
+      this.tick();
   }
   tick() {
       this.setState({newTime:moment().format('YYYY-MM-DD HH:mm')});
@@ -109,50 +128,42 @@ class Counter extends React.Component {
       this.areaChange();
   }
   syncModal= (stream) => {
-    let newKey = parseInt(10 * Math.random());
-    this.setState({ synckey: newKey });
-    this.setState({ syncVisible: true });
-    this.params = {streamName:stream}
-    this.syncChange();
+      let newKey = parseInt(10 * Math.random());
+      this.setState({ synckey: newKey });
+      this.setState({ syncVisible: true });
+      this.params = {streamName:stream}
+      this.syncChange();
   }
   areaChange = (pagination)=>{
-    let _this = this,pageParams={},filtersField={};
-    if(_this.params === undefined || _this.params === ''){
-        filtersField={streamName:''};
+      let _this = this,pageParams={},filtersField={};
+      if(_this.params === undefined || _this.params === ''){
+          filtersField={streamName:''};
+        }else{
+          Object.assign(filtersField, _this.params);
+        }
+      if(pagination){
+          pageParams = { curPage: pagination.current, pageSize: pagination.pageSize };
       }else{
-        Object.assign(filtersField, _this.params);
+          pageParams = { curPage: 1, pageSize: 10 };
       }
-    if(pagination){
-        pageParams = { curPage: pagination.current, pageSize: pagination.pageSize };
-    }else{
-        pageParams = { curPage: 1, pageSize: 10 };
-    }
-    const areaParams = Object.assign({}, pageParams,filtersField);
-    this.props.getArea(areaParams); 
+      const areaParams = Object.assign({}, pageParams,filtersField);
+      this.props.getArea(areaParams); 
   }
   syncChange = (pagination)=>{
-    let _this = this,pageParams={},filtersField={};
-    if(_this.params === undefined || _this.params === ''){
-        filtersField={streamName:''};
+      let _this = this,pageParams={},filtersField={};
+      if(_this.params === undefined || _this.params === ''){
+          filtersField={streamName:''};
+        }else{
+          Object.assign(filtersField, _this.params);
+        }
+      if(pagination){
+          pageParams = { curPage: pagination.current, pageSize: pagination.pageSize };
       }else{
-        Object.assign(filtersField, _this.params);
+          pageParams = { curPage: 1, pageSize: 10 };
       }
-    if(pagination){
-        pageParams = { curPage: pagination.current, pageSize: pagination.pageSize };
-    }else{
-        pageParams = { curPage: 1, pageSize: 10 };
-    }
-    const params = Object.assign({}, pageParams,filtersField);
-    this.props.getSyncData(params); 
+      const params = Object.assign({}, pageParams,filtersField);
+      this.props.getSyncData(params); 
   }
-//   jumpLink=(link,dmc)=>{
-//       appHistory.push({
-//           pathname: link,
-//           query: {
-//               dmcTag:dmc,
-//           },
-//       })
-//   }
   jumpDmc=(link,dmc)=>{
     appHistory.push({
         pathname: link,
@@ -204,8 +215,7 @@ class Counter extends React.Component {
       title: '流名称',
       dataIndex: 'streamName',
       key: 'streamName',
-      width: 250,
-      render:(text)=><span title={text} className="ellips width250">{text}</span>,
+      render:(text)=><span title={text}>{text}</span>,
       sorter:true,
       filteredValue: filteredInfo.streamName || '',
       sortOrder: sortedInfo.columnKey === 'streamName' && sortedInfo.order,
@@ -214,11 +224,11 @@ class Counter extends React.Component {
       title: 'DMC名称',
       dataIndex: 'dmcList',
       key: 'dmcList',
-      width: 100,
+      width:200,
       render: (text,record) => {
         return(
           record.dmcList && record.dmcList.map(function(item,index){
-            return <a href="javascript:;" title={item.dmcName} className="ellips width100" onClick={()=>self.jumpDmc('dmc',item.dmcName)}>
+            return <a href="javascript:;" onClick={()=>self.jumpDmc('dmc',item.dmcName)}>
                     {item.dmcName}
                    </a>
         })
@@ -228,11 +238,11 @@ class Counter extends React.Component {
       title: 'DMS名称',
       dataIndex: 'dmsList',
       key: 'dmsList',
-      width: 100,
+      width: 200,
       render: (text,record) => {
         return(
             record.dmsList &&  record.dmsList.map(function(item,index){
-            return <a href="javascript:;" title={item.dmsName} className="ellips width100" onClick={()=>self.jumpDms('dms',item.dmsName)}>
+            return <a href="javascript:;" onClick={()=>self.jumpDms('dms',item.dmsName)}>
                       {item.dmsName}
                     </a>
           })
@@ -242,7 +252,7 @@ class Counter extends React.Component {
       width:90,
       dataIndex: 'syncFlag',
       key: 'syncFlag',
-      render: text => <span title={text} className="ellips width90">{text}</span>,
+      render: text => <span title={text}>{text}</span>,
       sorter: true,
       filteredValue: filteredInfo.isSync || '',
       sortOrder: sortedInfo.columnKey === 'isSync' && sortedInfo.order,
@@ -251,7 +261,7 @@ class Counter extends React.Component {
       width:130,
       dataIndex: 'beginTime',
       key: 'beginTime',
-      render: text => <span title={text} className="ellips width130">{text}</span>,
+      render: text => <span title={text}>{text}</span>,
       sorter: true,
       sortOrder: sortedInfo.columnKey === 'beginTime' && sortedInfo.order,
     },{
@@ -261,7 +271,7 @@ class Counter extends React.Component {
           width:80,
            dataIndex: 'resolution',
            key: 'resolution',
-           render: text => <span title={text} className="ellips width80">{text}</span>,
+           render: text => <span title={text}>{text}</span>,
            sorter:true,
            sortOrder: sortedInfo.columnKey === 'resolution' && sortedInfo.order,
         }, {
@@ -269,7 +279,7 @@ class Counter extends React.Component {
             width:50,
             dataIndex: 'frameRate',
             key: 'frameRate',
-            render:(text)=>(<span title={text} className="ellips width50">{text}</span>),
+            render:(text)=>(<span title={text}>{text}</span>),
             sorter: true,
             sortOrder: sortedInfo.columnKey === 'frameRate' && sortedInfo.order,
         }], 
@@ -280,23 +290,23 @@ class Counter extends React.Component {
           width:90,
            dataIndex: 'publishFlow',
            key: 'publishFlow',
-           render: text => <span title={text} className="ellips width90">{text}</span>,
+           render: text => <span title={text}>{text}</span>,
            sorter: true,
            sortOrder: sortedInfo.columnKey === 'publishFlow' && sortedInfo.order,
         },{
             title: '客户端',
-            width:140,
+            width:100,
             dataIndex: 'publishClient',
             key: 'publishClient',
-            render: (text,record) => <span title={text} className="ellips width140">{text}</span>,
+            render: (text,record) => <span title={text}>{text}</span>,
             sorter: true,
             sortOrder: sortedInfo.columnKey === 'publishClient' && sortedInfo.order,
         },{
             title: '区域',
             dataIndex: 'publishArea',
             key: 'publishArea',
-            width:80,
-            render: text => <span title={text} className="ellips width80">{text}</span>,
+            width:100,
+            render: text => <span title={text}>{text}</span>,
             sorter: true,
             sortOrder: sortedInfo.columnKey === 'publishArea' && sortedInfo.order,
         }], 
@@ -304,18 +314,18 @@ class Counter extends React.Component {
         title: '下行',
         children: [{
           title: '客户端',
-          width:140,
+          width:100,
           dataIndex: 'subClientNum',
           key: 'subClientNum',
-          render: (text,record) => (text > 0)?<a href="javascript:;" title={text} className="ellips width140" onClick={()=>this.jumpFlow('zen',record.streamName)}>{text}</a>:<span title={text} className="ellips width140">{text}</span>,
+          render: (text,record) => (text > 0)?<a href="javascript:;" title={text} className="ellips" onClick={()=>this.jumpFlow('zen',record.streamName)}>{text}</a>:<span title={text}>{text}</span>,
           sorter: true,
           sortOrder: sortedInfo.columnKey === 'subClientNum' && sortedInfo.order,
         }, {
             title: '独立IP',
             dataIndex: 'subIpNum',
             key: 'subIpNum',
-            width:60,
-            render: (text,record) =>  (text > 0)?<a href="javascript:;" title={text} className="ellips width60" onClick={()=>this.jumpFlow('independentIp',record.streamName)}>{text}</a>:<span title={text} className="ellips width60">{text}</span>,
+            width:80,
+            render: (text,record) =>  (text > 0)?<a href="javascript:;" title={text} className="ellips" onClick={()=>this.jumpFlow('independentIp',record.streamName)}>{text}</a>:<span title={text}>{text}</span>,
             sorter: true,
             sortOrder: sortedInfo.columnKey === 'subIpNum' && sortedInfo.order,
         },{
@@ -323,7 +333,7 @@ class Counter extends React.Component {
             width:90,
             dataIndex: 'subFlow',
             key: 'subFlow',
-            render: text => <span title={text} className="ellips width90">{text}</span>,
+            render: text => <span title={text} className="ellips">{text}</span>,
             sorter: true,
             sortOrder: sortedInfo.columnKey === 'subFlow' && sortedInfo.order,
         },{
@@ -331,7 +341,7 @@ class Counter extends React.Component {
             width:80,
             dataIndex: 'subAreaNum',
             key: 'subAreaNum',
-            render: (text,record) => (text > 0)?<a href="javascript:;" title={text} className="ellips width80" onClick={()=>this.showModal(record.streamName)}>{text}</a>:<span title={text} className="ellips width80">{text}</span>,
+            render: (text,record) => (text > 0)?<a href="javascript:;" title={text} className="ellips" onClick={()=>this.showModal(record.streamName)}>{text}</a>:<span title={text}>{text}</span>,
             sorter: true,
             sortOrder: sortedInfo.columnKey === 'subAreaNum' && sortedInfo.order,
         },{
@@ -339,7 +349,7 @@ class Counter extends React.Component {
             width:64,
             dataIndex: 'subDropRate',
             key: 'subDropRate',
-            render: text => <span title={text} className="ellips width60">{text}</span>,
+            render: text => <span title={text}>{text}</span>,
             sorter: true,
             sortOrder: sortedInfo.columnKey === 'subDropRate' && sortedInfo.order,
         }], 
@@ -348,7 +358,7 @@ class Counter extends React.Component {
             width:50,
             dataIndex: 'graph',
             key: 'graph',
-            render:(text, record)=><a href="javascript:;" className="c-modle" style={{ width:50 }} onClick={()=>this.jumpFlow('elapse',record.streamName)} >查看</a>,
+            render:(text, record)=><a href="javascript:;" onClick={()=>this.jumpFlow('elapse',record.streamName)} >查看</a>,
         },{
             title: '同步',
               children: [{
@@ -356,7 +366,7 @@ class Counter extends React.Component {
                  dataIndex: 'syncNum',
                  key: 'syncNum',
                  width:80,
-                render: (text,record) => (text > 0)?<a href="javascript:;" title={text} className="ellips width80" onClick={()=>this.syncModal(record.streamName)}>{text}</a>:<span className="ellips width80">{text}</span>,
+                render: (text,record) => (text > 0)?<a href="javascript:;" title={text} className="ellips" onClick={()=>this.syncModal(record.streamName)}>{text}</a>:<span>{text}</span>,
                  sorter: true,
                  sortOrder: sortedInfo.columnKey === 'syncNum' && sortedInfo.order,
               },{
@@ -364,7 +374,7 @@ class Counter extends React.Component {
                 width:90,
                 dataIndex: 'syncFlow',
                 key: 'syncFlow',
-                render: text => <span title={text} className="ellips width90">{text}</span>,
+                render: text => <span title={text}>{text}</span>,
                 sorter: true,
                 sortOrder: sortedInfo.columnKey === 'syncFlow' && sortedInfo.order,
               },{
@@ -372,7 +382,7 @@ class Counter extends React.Component {
                 width:60,
                 dataIndex: 'syncDropRate',
                 key: 'syncDropRate',
-                render: text => <span title={text} className="ellips width60">{text}</span>,
+                render: text => <span title={text}>{text}</span>,
                 sorter: true,
                 sortOrder: sortedInfo.columnKey === 'syncDropRate' && sortedInfo.order,
               }], 
@@ -381,7 +391,6 @@ class Counter extends React.Component {
             <div id="flow">
                 <Topone title={this.state.titleName} name={this.state.name} />
                 <Search valSearch={this.valSearch.bind(this)} dmcTag={(this.props.location.query.dmcTag) ? this.props.location.query.dmcTag :''} dmsTag={(this.props.location.query.dmsTag) ? this.props.location.query.dmsTag :''} streamName={(this.props.location.query.streamName) ? this.props.location.query.streamName :''} isSync={(this.props.location.query.isSync) ? this.props.location.query.isSync :''}/>
-                <ReactInterval timeout={this.state.timeout} enabled={true} callback={()=>{this.handleChange();this.tick();}} />
                 <Timebar itemNum={(pageDatas) ? pageDatas : 0} ref="getTime" handleMenuClick={this.handleMenuClick} timeName={this.state.timeName} newTime={this.state.newTime}/>
                 <Table rowKey={(record,key)=>key} columns={columns} dataSource={this.state.data} onChange={this.handleChange} pagination={pagination} />
                 <Modaldia newKey={this.state.key} visible={this.state.isVisible} modalSource={this.state.areaData} del={() => this.modalCancel()}  onChange={this.areaChange} pagination={areaPagination} />

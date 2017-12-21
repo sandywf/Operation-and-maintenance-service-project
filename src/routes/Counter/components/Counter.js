@@ -1,7 +1,8 @@
 import React from 'react';
-import { ReactInterval } from 'react-interval';
+import ReactDOM from 'react-dom';
+import ReactInterval from 'react-interval';
 import moment from 'moment';
-import { Table,Input,Button,Select } from 'antd';
+import {Table,Input,Button,Select } from 'antd';
 import Search from './Search';
 import Topone from '../../../components/common/TopOne';
 import Timebar from '../../../components/common/Time';
@@ -31,9 +32,11 @@ class Counter extends React.Component {
                 key:Math.random(),
                 titleName:'独立IP',
                 timeout:60000,
+                enabled: true,
+                callback:this.setTime,
                 timeName:'1分钟',
                 newTime:moment().format('YYYY-MM-DD HH:mm'),
-                name:'indClient'
+                name:'indClient',
         };
     }
     /*真实的DOM被渲染出来后调用*/
@@ -41,6 +44,7 @@ class Counter extends React.Component {
         if(!this.props.location.search){
             this.props.getKHData();
         }
+        this.timerFun(60000);
     }
     /*组件接收到新的props时调用*/
     componentWillReceiveProps(nextProps){ 
@@ -51,13 +55,29 @@ class Counter extends React.Component {
             this.setState({flowData:nextProps.flowData});
         }    
     }
+    // 销毁定时器
+    componentWillUnmount(){
+        this.timer && clearTimeout(this.timer);
+    }
+    timerFun=(time)=>{
+        this.timer && clearTimeout(this.timer);
+        this.timer = setInterval(() => {
+            this.setTime();
+        }, time)
+    }
     handleMenuClick =(e)=>{
         if(parseInt(e.key)=='0'){
-            this.handleChange();this.tick();
+            this.setTime();
+            this.timerFun(60000);
         }else{
             this.setState({timeout:parseInt(e.key)});
             this.setState({timeName: e.domEvent.currentTarget.innerHTML});
+            this.timerFun(parseInt(e.key));
         }
+    }
+    setTime=()=>{
+        this.handleChange();
+        this.tick();
     }
     tick() {
         this.setState({newTime:moment().format('YYYY-MM-DD HH:mm')});
@@ -142,6 +162,7 @@ class Counter extends React.Component {
         })
     }
     render() {
+        const {callback, timeout, enabled} = this.state;
         let self = this;
         const { data,pageCur,pageDatas,pages ,flowData} = this.props;
         let { sortedInfo, filteredInfo } = this.state;
@@ -159,7 +180,7 @@ class Counter extends React.Component {
             dataIndex: 'ip',
             key: 'ip',
             width: 200,
-            render:(text)=><span title={text} className="ellips width200">{text}</span>,
+            render:(text)=><span title={text}>{text}</span>,
             sorter:true,
             sortOrder: sortedInfo.columnKey === 'ip' && sortedInfo.order,
             filteredValue: filteredInfo.ip || '',
@@ -169,18 +190,18 @@ class Counter extends React.Component {
             dataIndex: 'areaName',
             key: 'areaName',
             width: 150,
-            render:(text)=><span title={text} className="ellips width150">{text}</span>,
+            render:(text)=><span title={text}>{text}</span>,
             sorter:true,
             sortOrder: sortedInfo.columnKey === 'areaName' && sortedInfo.order,
         },{
             title: 'DMC',
             dataIndex: 'dmcSet',
             key: 'dmcSet',
-            width: 250,
+            width: 200,
             render: (text,record) => {
                 return(
                     record.dmcSet && record.dmcSet.map(function(item,index){
-                    return <a href="javascript:;" title={item.dmcName} className="ellips width250" onClick={()=>self.jumpLink('dmc',item.dmcName)}>
+                    return <a href="javascript:;" onClick={()=>self.jumpLink('dmc',item.dmcName)}>
                               {item.dmcName}
                             </a>
                   })
@@ -190,11 +211,11 @@ class Counter extends React.Component {
             title: 'DMS',
             dataIndex: 'dmsSet',
             key: 'dmsSet',
-            width: 150,
+            width: 200,
             render: (text,record) => {
                 return(
                     record.dmsSet &&  record.dmsSet.map(function(item,index){
-                    return <a href="javascript:;" title={item.dmsName} className="ellips width150" onClick={()=>self.jumpDms('dms',item.dmsName)}>
+                    return <a href="javascript:;" onClick={()=>self.jumpDms('dms',item.dmsName)}>
                               {item.dmsName}
                             </a>
                   })
@@ -203,11 +224,11 @@ class Counter extends React.Component {
             title: '活跃流',
             dataIndex: 'activeStreamNameSet',
             key: 'activeStreamNameSet',
-            width: 150,
+            width: 250,
             render: (text,record) => {
                 return(
                      record.activeStreamNameSet &&  record.activeStreamNameSet.map(function(value,index){
-                        return <a href="javascript:;" title={value} className="ellips width150" onClick={()=>self.jumpFlow('flow',value)}>
+                        return <a href="javascript:;" onClick={()=>self.jumpFlow('flow',value)}>
                                     {value}
                                 </a>
                     }) 
@@ -221,7 +242,7 @@ class Counter extends React.Component {
                 dataIndex: 'publishActiveNum',
                 key: 'publishActiveNum',
                 width:130,
-                render:(text,record)=>(text > 0)?<span className="c-modle ellips width130" title={text} onClick={()=>this.showModal(record.ip,'up')}>{text}</span>:<span className="ellips width130">{text}</span>,
+                render:(text,record)=>(text > 0)?<span title={text} onClick={()=>this.showModal(record.ip,'up')}>{text}</span>:<span title={text}>{text}</span>,
                 sorter:true,
                 sortOrder: sortedInfo.columnKey === 'publishActiveNum' && sortedInfo.order,
             },{
@@ -230,7 +251,7 @@ class Counter extends React.Component {
               dataIndex: 'publishBps',
                 key: 'publishBps',
                 width: 90,
-                render:(text)=><span title={text} className="ellips width90">{text}</span>,
+                render:(text)=><span title={text}>{text}</span>,
               sorter:true,
               sortOrder: sortedInfo.columnKey === 'publishBps' && sortedInfo.order,
             }], 
@@ -241,7 +262,7 @@ class Counter extends React.Component {
               dataIndex: 'subscriptionActionNum',
               width:130,
             key: 'subscriptionActionNum',
-              render:(text,record)=>(text > 0)?<span className="c-modle ellips width130" onClick={()=>this.showModal(record.ip,'down')}>{text}</span>:<span className="ellips width130">{text}</span>,
+              render:(text,record)=>(text > 0)?<span title={text} onClick={()=>this.showModal(record.ip,'down')}>{text}</span>:<span title={text}>{text}</span>,
               sorter:true,
               sortOrder: sortedInfo.columnKey === 'subscriptionActionNum' && sortedInfo.order,
         }, {
@@ -249,7 +270,7 @@ class Counter extends React.Component {
             dataIndex: 'subscriptionNum',
             key: 'subscriptionNum',
             width: 90,
-            render: (text,record) => (text > 0)?<a href="javascript:;" title={text} className="ellips width90" onClick={()=>this.jumpIp('zen',record.ip)}>{text}</a>:<span title={text} className="ellips width90">{text}</span>,
+            render: (text,record) => (text > 0)?<a href="javascript:;" title={text} onClick={()=>this.jumpIp('zen',record.ip)}>{text}</a>:<span title={text}>{text}</span>,
             sorter:true,
             sortOrder: sortedInfo.columnKey === 'subscriptionNum' && sortedInfo.order,
         },{
@@ -257,7 +278,7 @@ class Counter extends React.Component {
             width:90,
             dataIndex: 'subscriptionBps',
             key: 'subscriptionBps',
-            render:(text)=><span title={text} className="ellips width90">{text}</span>,
+            render:(text)=><span title={text}>{text}</span>,
             sorter:true,
             sortOrder: sortedInfo.columnKey === 'subscriptionBps' && sortedInfo.order,
         },{
@@ -265,7 +286,7 @@ class Counter extends React.Component {
             width:64,
             dataIndex: 'subscriptionDropRate',
             key: 'subscriptionDropRate',
-            render:(text)=><span title={text} className="ellips width60">{text}</span>,
+            render:(text)=><span title={text}>{text}</span>,
             sorter:true,
             sortOrder: sortedInfo.columnKey === 'subscriptionDropRate' && sortedInfo.order,
         }], 
@@ -275,7 +296,8 @@ class Counter extends React.Component {
             <div id="indClient">
                 <Topone title={this.state.titleName} name={this.state.name}/>
                 <Search valSearch={this.valSearch.bind(this)} dmcName={(this.props.location.query.dmcName) ? this.props.location.query.dmcName :''} dmcTag={(this.props.location.query.dmcTag) ? this.props.location.query.dmcTag :''} dmsTag={(this.props.location.query.dmsTag) ? this.props.location.query.dmsTag :''} ip={(this.props.location.query.ip) ? this.props.location.query.ip :''}  streamName={(this.props.location.query.streamName) ? this.props.location.query.streamName :''} />
-                <ReactInterval timeout={this.state.timeout} enabled={true} callback={()=>{this.handleChange();this.tick();}} />
+                {/* <ReactInterval {...{timeout, enabled,callback}} /> */}
+                {/* <ReactInterval timeout={this.state.timeout} enabled={true} callback={()=>{this.handleChange();this.tick();}} /> */}
                 <Timebar itemNum={(pageDatas) ? pageDatas : 0} ref="getTime" handleMenuClick={this.handleMenuClick} timeName={this.state.timeName} newTime={this.state.newTime}/>
                 <Table rowKey={(record,key) => key} columns={columns} dataSource={this.state.data} onChange={this.handleChange} pagination={pagination} />
                 <Modaldia newKey={this.state.key} visible={this.state.isVisible} modalSource={this.state.flowData} del = {()=>this.modalCancel()} />

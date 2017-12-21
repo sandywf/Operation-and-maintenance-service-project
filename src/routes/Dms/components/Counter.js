@@ -1,5 +1,4 @@
 import React from 'react';
-import { ReactInterval } from 'react-interval';
 import moment from 'moment';
 import { Table,Input,Button,Select } from 'antd';
 import Search from './Search';
@@ -48,7 +47,7 @@ class Counter extends React.Component {
         if(!this.props.location.search){
             this.props.getDMSData();
         }
-       // this.props.getDMSData();
+        this.timerFun(60000);
     }
   /*组件接收到新的props时调用*/
     componentWillReceiveProps(nextProps){ 
@@ -65,13 +64,32 @@ class Counter extends React.Component {
             this.setState({errorData:nextProps.errorData});
         } 
     }
+    // 销毁定时器
+    componentWillUnmount(){
+        this.timer && clearTimeout(this.timer);
+    }
+    // 定时器的时间选择
     handleMenuClick =(e)=>{
         if(parseInt(e.key)=='0'){
-			this.handleChange();this.tick();
-		}else{
-			this.setState({timeName: e.domEvent.currentTarget.innerHTML});
-			this.setState({timeout:parseInt(e.key)});
-		}
+            this.setTime();
+            this.timerFun(60000);
+        }else{
+            this.setState({timeout:parseInt(e.key)});
+            this.setState({timeName: e.domEvent.currentTarget.innerHTML});
+            this.timerFun(parseInt(e.key));
+        }
+    }
+    // 定时器方法
+    timerFun=(time)=>{
+        this.timer && clearTimeout(this.timer);
+        this.timer = setInterval(() => {
+            this.setTime();
+        }, time)
+    }
+    // 定时器回调
+    setTime=()=>{
+        this.handleChange();
+        this.tick();
     }
     tick() {
         this.setState({newTime:moment().format('YYYY-MM-DD HH:mm')});
@@ -253,8 +271,8 @@ class Counter extends React.Component {
               title: 'DMS名称',
               dataIndex: 'dmsName',
               key: 'dmsName',
-              width: 200,
-              render:(text)=><span title={text} className="ellips width200">{text}</span>,
+              width: 100,
+              render:(text)=><span title={text}>{text}</span>,
               sorter: true,
               sortOrder: sortedInfo.columnKey === 'dmsTag' && sortedInfo.order,
               filteredValue: filteredInfo.dmsName || '',
@@ -262,17 +280,17 @@ class Counter extends React.Component {
               title: 'DMC名称',
               dataIndex: 'dmcName',
               key: 'dmcName',
-              width: 150,
-              render:(text,record)=><a href="javascript:;" title={text} className="ellips width150" onClick={()=>this.jumpDmc('dmc',record.dmcName)} >{text}</a>,
+              width: 100,
+              render:(text,record)=><a href="javascript:;" title={text} className="ellips" onClick={()=>this.jumpDmc('dmc',record.dmcName)} >{text}</a>,
               sorter: true,
               sortOrder: sortedInfo.columnKey === 'dmcTag' && sortedInfo.order,
               filteredValue: filteredInfo.dmcTag || '',
             },{
                 title: 'Domain',
-                width:80,
+                width:70,
                 dataIndex: 'domain',
                 key: 'domain',
-                render:(text)=><span title={text} className="ellips width80">{text}</span>,
+                render:(text)=><span title={text}>{text}</span>,
                 sorter: true,
                 sortOrder: sortedInfo.columnKey === 'domain' && sortedInfo.order,
             },{
@@ -280,7 +298,7 @@ class Counter extends React.Component {
                 dataIndex: 'serverType',
                 key: 'serverType',
                 width:80,
-                render:(text)=><span title={text} className="ellips width80">{text}</span>,
+                render:(text)=><span title={text}>{text}</span>,
                 sorter: true,
                 sortOrder: sortedInfo.columnKey === 'serverType' && sortedInfo.order,
                 filteredValue: filteredInfo.serverType || '',
@@ -289,7 +307,7 @@ class Counter extends React.Component {
                 dataIndex: 'serverNum',
                 key: 'serverNum',
                 width: 80,
-                render: (text,record) => (text > 0) ? <a href="javascript:;"  title={text} className="ellips width80" onClick={()=>this.showAddressModal(record.dmsTag)}>{text}</a>:<span title={text} className="ellips width80">{text}</span>,
+                render: (text,record) => (text > 0) ? <a href="javascript:;"  title={text} className="ellips" onClick={()=>this.showAddressModal(record.dmsTag)}>{text}</a>:<span title={text}>{text}</span>,
                 sorter: true,
                 sortOrder: sortedInfo.columnKey === 'serverNum' && sortedInfo.order,
             },{
@@ -297,7 +315,7 @@ class Counter extends React.Component {
                 dataIndex: 'errorNum',
                 key: 'errorNum',
                 width: 80,
-                render:(text,record)=> (text > 0) ? <a href="javascript:;"  title={text} className="ellips width80" onClick={()=>this.showErrorModal(record.dmsTag)}>{text}</a>:<span title={text} className="ellips width80">{text}</span>,
+                render:(text,record)=> (text > 0) ? <a href="javascript:;"  title={text} className="ellips" onClick={()=>this.showErrorModal(record.dmsTag)}>{text}</a>:<span title={text}>{text}</span>,
                 sorter: true,
                 sortOrder: sortedInfo.columnKey === 'errorNum' && sortedInfo.order,
             },{
@@ -307,7 +325,7 @@ class Counter extends React.Component {
                 width:90,
                 sorter: true,
                 sortOrder: sortedInfo.columnKey === 'streamNum' && sortedInfo.order,
-                render:(text,record)=> (text > 0) ? <a href="javascript:;" className="ellips width90" onClick={()=>this.jumpLink('flow',record.dmcTag,record.dmsTag)} >{text + ((record.syncStreamCnt) ? '(同步'+ (record.syncStreamCnt)+')' :'')}</a>:(text + ((record.syncStreamCnt) ? '(同步'+ (record.syncStreamCnt)+')' :'')),
+                render:(text,record)=> (text > 0) ? <a href="javascript:;" className="ellips" onClick={()=>this.jumpLink('flow',record.dmcTag,record.dmsTag)} >{text + ((record.syncStreamCnt) ? '(同步'+ (record.syncStreamCnt)+')' :'')}</a>:(text + ((record.syncStreamCnt) ? '(同步'+ (record.syncStreamCnt)+')' :'')),
             },{
                 title: '上行',
                 children: [{
@@ -315,7 +333,7 @@ class Counter extends React.Component {
                     width:90,
                     dataIndex: 'upFlow',
                     key: 'upFlow',
-                    render: text => <span title={text} className="ellips width90">{text}</span>,
+                    render: text => <span title={text}>{text}</span>,
                     sorter:true,
                     sortOrder: sortedInfo.columnKey === 'upFlow' && sortedInfo.order,
                 }, {
@@ -323,7 +341,7 @@ class Counter extends React.Component {
                 width:80,
                 dataIndex: 'upAreaNum',
                 key: 'upAreaNum',
-                render: (text,record) =>(text > 0)?(<a href="javascript:;"  className="c-modle ellips width80" title={text} className="ellips width80" onClick={()=>this.showModal(record.dmsTag,derectUp)}>{text}</a>):<span title={text} className="ellips width80">{text}</span>,
+                render: (text,record) =>(text > 0)?(<a href="javascript:;"  className="ellips" title={text} onClick={()=>this.showModal(record.dmsTag,derectUp)}>{text}</a>):<span title={text}>{text}</span>,
                 sorter: true,
                 sortOrder: sortedInfo.columnKey === 'upAreaNum' && sortedInfo.order,
                 }], 
@@ -334,7 +352,7 @@ class Counter extends React.Component {
                     dataIndex: 'downClientNum',
                     key: 'downClientNum',
                     width:60,
-                    render: (text,record) => (text > 0)?<a href="javascript:;" className="c-modle ellips width60" title={text} onClick={()=>this.jumpLink('zen',record.dmcTag,record.dmsTag)}>{text}</a>:<span title={text} className="ellips width60">{text}</span>,
+                    render: (text,record) => (text > 0)?<a href="javascript:;" className="ellips" title={text} onClick={()=>this.jumpLink('zen',record.dmcTag,record.dmsTag)}>{text}</a>:<span title={text}>{text}</span>,
                     sorter: true,
                     sortOrder: sortedInfo.columnKey === 'downClientNum' && sortedInfo.order,
                 }, {
@@ -342,7 +360,7 @@ class Counter extends React.Component {
                     dataIndex: 'downIpNum',
                     key: 'downIpNum',
                     width:60,
-                    render: (text,record) => (text > 0)?<a href="javascript:;"  className="c-modle ellips width60" title={text} onClick={()=>this.jumpLink('independentIp',record.dmcTag,record.dmsTag)}>{text}</a>:<span title={text} className="ellips width60">{text}</span>,
+                    render: (text,record) => (text > 0)?<a href="javascript:;"  className="ellips" title={text} onClick={()=>this.jumpLink('independentIp',record.dmcTag,record.dmsTag)}>{text}</a>:<span title={text}>{text}</span>,
                     sorter: true,
                     sortOrder: sortedInfo.columnKey === 'downIpNum' && sortedInfo.order,
                 },{
@@ -350,7 +368,7 @@ class Counter extends React.Component {
                     width:90,
                     dataIndex: 'downFlow',
                     key: 'downFlow',
-                    render: text => <span title={text} className="ellips width90">{text}</span>,
+                    render: text => <span title={text}>{text}</span>,
                     sorter:true,
                     sortOrder: sortedInfo.columnKey === 'downFlow' && sortedInfo.order,
                 },{
@@ -358,7 +376,7 @@ class Counter extends React.Component {
                     width:80,
                     dataIndex: 'downAreaNum',
                     key: 'downAreaNum',
-                    render: (text,record) =>(text > 0)?(<a href="javascript:;"  className="c-modle ellips width80" title={text} onClick={()=>this.showModal(record.dmsTag,derectDown)}>{text}</a>):<span title={text} className="ellips width80">{text}</span>,
+                    render: (text,record) =>(text > 0)?(<a href="javascript:;"  className="ellips" title={text} onClick={()=>this.showModal(record.dmsTag,derectDown)}>{text}</a>):<span title={text}>{text}</span>,
                     sorter: true,
                     sortOrder: sortedInfo.columnKey === 'downAreaNum' && sortedInfo.order,
                 },{
@@ -366,19 +384,19 @@ class Counter extends React.Component {
                     width:60,
                     dataIndex: 'dropRate',
                     key: 'dropRate',
-                    render: text => <span title={text} className="ellips width60">{text}</span>,
+                    render: text => <span title={text}>{text}</span>,
                     sorter: true,
                     sortOrder: sortedInfo.columnKey === 'dropRate' && sortedInfo.order,
                 }]},{
                 title: '图形',
                 width:50,
-                render:(text, record)=><a href="javascript:;" className="c-modle" style={{ width:50 }} onClick={()=>this.jumpLink('elapse',record.dmcTag,record.dmsTag)} >查看</a>,
+                render:(text, record)=><a href="javascript:;" onClick={()=>this.jumpLink('elapse',record.dmcTag,record.dmsTag)} >查看</a>,
             }];
             return (
                 <div id="dms">
                     <Topone title={this.state.titleName} name={this.state.name} />
                     <Search valSearch={this.valSearch.bind(this)} dmcTag={(this.props.location.query.dmcTag) ? this.props.location.query.dmcTag :''} dmsName={(this.props.location.query.dmsName) ? this.props.location.query.dmsName :''} isAlive={(this.props.location.query.activeStatus) ? this.props.location.query.activeStatus :''}/>
-                    {<ReactInterval timeout={this.state.timeout} enabled={true} callback={()=>{this.handleChange();this.tick();}} />}
+                    {/* {<ReactInterval timeout={this.state.timeout} enabled={true} callback={()=>{this.handleChange();this.tick();}} />} */}
                     <Timebar itemNum={(pageDatas) ? pageDatas : 0} ref="getTime" handleMenuClick={this.handleMenuClick} timeName={this.state.timeName} newTime={this.state.newTime}/>
                     <Table rowKey={(record,key) => key} rowClassName={(record) => record.errorNum !== '0' ? 'error-color' : ''} columns={columns} dataSource={this.state.data} onChange={this.handleChange} pagination={pagination} />
                     <Modaldia newKey={this.state.key} visible={this.state.isVisible} modalSource={this.state.areaData} del={() => this.modalCancel()} onChange={this.areaChange} pagination={areaPagination} />

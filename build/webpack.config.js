@@ -188,7 +188,6 @@ webpackConfig.postcss = [
 ]
 // 清除哈希打包文件
 var cleanpath = path.resolve(__dirname,'../dist/');
-console.log('cleanpath',cleanpath);
 webpackConfig.plugins.push(
   new CleanDist(cleanpath)
 )

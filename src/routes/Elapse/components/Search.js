@@ -107,7 +107,7 @@ class Search extends React.Component {
         this.searchParms();
     }
     searchParms(){
-        let _this = this,endTime = moment(moment(), 'YYYY-MM-DD HH:mm:ss'),zoomValue=this.state.zoomValue,dmcParams={},dotParam={dotNum: 13,xAxisTimeFormat:'YYYY-MM-dd HH:mm'},streamParams={};
+        let _this = this,endTime = moment(moment(), 'YYYY-MM-DD HH:mm:ss'),zoomValue=this.state.zoomValue,dmcParams={},dotParam={dotNum: 6,xAxisTimeFormat:'YYYY-MM-dd HH:mm:ss'},streamParams={};
         if(_this.lineTime ){
             endTime=_this.lineTime;
         }

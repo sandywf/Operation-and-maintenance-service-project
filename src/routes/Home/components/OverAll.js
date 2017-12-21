@@ -1,5 +1,4 @@
 import React from 'react';
-import { ReactInterval } from 'react-interval';
 import moment from 'moment';
 import Timebar from '../../../components/common/Time';
 import {Select,Menu, Dropdown} from 'antd';
@@ -18,17 +17,39 @@ class OverAll extends React.Component {
 		newTime:moment().format('YYYY-MM-DD HH:mm'),
 		all:'all'
 	}
-	handleMenuClick =(e)=>{
-		if(parseInt(e.key)=='0'){
-			this.props.getOverall();this.tick();
-		}else{
-			this.props.getOverall();this.tick();
-			this.setState({timeName: e.domEvent.currentTarget.innerHTML});
-			this.setState({timeout:parseInt(e.key)});
-		}
+	/*真实的DOM被渲染出来后调用*/
+	componentDidMount(){
+        this.timerFun(60000);
 	}
+	 // 销毁定时器
+	 componentWillUnmount(){
+        this.timer && clearTimeout(this.timer);
+    }
+    // 定时器的时间选择
+    handleMenuClick =(e)=>{
+        if(parseInt(e.key)=='0'){
+            this.setTime();
+            this.timerFun(60000);
+        }else{
+            this.setState({timeout:parseInt(e.key)});
+            this.setState({timeName: e.domEvent.currentTarget.innerHTML});
+            this.timerFun(parseInt(e.key));
+        }
+    }
+    // 定时器方法
+    timerFun=(time)=>{
+        this.timer && clearTimeout(this.timer);
+        this.timer = setInterval(() => {
+            this.setTime();
+        }, time)
+    }
+    // 定时器回调
+    setTime=()=>{
+		this.props.getOverall();
+		this.tick();
+    }
 	tick() {
-			this.setState({newTime:moment().format('YYYY-MM-DD HH:mm')});
+		this.setState({newTime:moment().format('YYYY-MM-DD HH:mm')});
 	}
 	jumpAtv=(link,active)=>{
 		appHistory.push({
@@ -64,7 +85,6 @@ class OverAll extends React.Component {
 		 upStreamBps:''};
   		return (
 			<div className="ms-overall-status linear">
-				<ReactInterval timeout={this.state.timeout} enabled={true} callback={()=>{this.props.getOverall();this.tick();}} />
       			<Timebar ref="getTime" all ={this.state.all} handleMenuClick={this.handleMenuClick} timeName={this.state.timeName} newTime={this.state.newTime}/>
 				<ul className="ms-view">
 				<li>

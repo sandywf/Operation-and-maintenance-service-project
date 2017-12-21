@@ -3,7 +3,7 @@ import { hashHistory,IndexLink, Link ,browserHistory} from 'react-router';
 import {createHashHistory} from 'history';
 var routerHistory =  require('react-router').useRouterHistory;  
 const appHistory = routerHistory(createHashHistory)({queryKey:false});  
-/*import '../../../node_modules/antd/dist/antd.css'*/
+
 import '../../public/_module/css/base.css'
 import '../../public/_module/js/common.js'
 import './Header.css'
@@ -11,10 +11,11 @@ import { Tabs } from 'antd'
 import Logo from '../../public/_module/images/main-logo.png'
 import HTTPUtil from '../../utils/request';
 const TabPane = Tabs.TabPane
-var userItem = [],userShow='disabled',flowShow='disabled',activeTag='0';
+var userItem = [],userShow='disabled',flowShow='disabled',activeTag="0";
 function callback(key) {
   key == '0' && appHistory.push('/');
   key == '5' && appHistory.push('/user');
+  activeTag=key;
 };
 function eidtPwd(){
   HTTPUtil.post('/user/loginout','').then((json) => {  
@@ -28,34 +29,34 @@ function eidtPwd(){
 class Header extends React.Component {
   componentWillMount(){
       if(localStorage.getItem('userType')==='normal_user'){
-        userItem = [
-          {path: "/personal", name: "个人资料"},
-        ]
+          userItem = [
+            {path: "/personal", name: "个人资料"},
+          ]
       }else{
-        userItem = [
-          {path: "/user", name: "用户列表"},
-          {path: "/personal", name: "个人资料"},
-        ]
+          userItem = [
+            {path: "/user", name: "用户列表"},
+            {path: "/personal", name: "个人资料"},
+          ]
       }
       if(localStorage.getItem('funcTag') == 'all'){
-        userShow='';
-        flowShow='';
-        // if((location.hash).includes('user')){
-        //   activeTag='4';
-        // }else if((location.hash).includes('personal')){
-        //   activeTag='5';
-        // }else if(){
-
-        // }
+          userShow='';
+          flowShow='';
       }else if(localStorage.getItem('funcTag') == 'user'){
-        userShow='';
-        flowShow='disabled';
-        // activeTag='0';
-        // appHistory.push('/user');
+          userShow='';
+          flowShow='disabled';
+          if((location.hash).includes('personal')){
+              appHistory.push('personal');
+          }else{
+            appHistory.push('user');
+          }
       }else{
-        flowShow='';
-        userShow='disabled';
-        // activeTag='4';
+          flowShow='';
+          userShow='disabled';
+      }
+      if(location.href.includes('user') || location.href.includes('personal')){
+        activeTag="5";
+      }else{
+        activeTag="0";
       }
   }
   render(){
@@ -113,7 +114,7 @@ class Header extends React.Component {
        <img alt='logo' src={Logo} />
       </div>
       <div className="menu-nav">
-         <Tabs onChange={callback}>
+         <Tabs onChange={callback} activeKey={activeTag}>
           {tabs.map((item,i)=>{
             return <TabPane defaultActiveKey={0} disabled={item.show} tab={ <span><i className={item.icon}></i> {item.name}</span> } key={i}>
               {item.Children.map(function(item,index){

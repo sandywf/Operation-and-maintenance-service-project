@@ -86,7 +86,7 @@ const Login = withRouter(
                       <ul className={classes["ms-nav"]}>
                         <li>
                           <i className="iconfont icon-respond-timely"></i>
-                          <h3>相应更及时</h3>
+                          <h3>响应更及时</h3>
                           <p>轻松应对故障，实时响应解决。</p>
                         </li>
 

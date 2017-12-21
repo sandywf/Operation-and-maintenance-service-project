@@ -2,7 +2,6 @@ import React from 'react';
 import { Dropdown,Menu } from 'antd';
 
 class Timebar extends React.Component {
-
     render() {
         const menu = (
                 <Menu onClick={this.props.handleMenuClick}>

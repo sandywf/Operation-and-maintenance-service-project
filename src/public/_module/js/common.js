@@ -3,17 +3,28 @@ import React from 'react';
 class FormatUtils{
   requestFullScreen(element) {  
       function checkFull(){
-            // var elevenFull = document.body.scrollHeight==window.screen.height&&document.body.scrollWidth==window.screen.width;
             var isFull =  document.fullscreenEnabled || window.fullScreen || document.webkitIsFullScreen || document.msFullscreenEnabled;
             if(isFull === undefined) isFull = false;
             return isFull;
-        }
-      window.onresize = function(){
+      }
+      function fullScreen(){
             if(!checkFull()){
                   element.setAttribute("screen","tuichu");      
             }else{
                   element.setAttribute("screen","quanping");
             }
+      }
+      document.onwebkitfullscreenchange= function() {
+            fullScreen();
+      }
+      document.onmozfullscreenchange=function(){
+            fullScreen();
+      }
+      document.onmsfullscreenchange=function(){
+            fullScreen();
+      }
+      document.onfullscreenchange=function(){
+            fullScreen();
       }
       var screenFall = element.getAttribute("screen");
       if(screenFall=='quanping'){

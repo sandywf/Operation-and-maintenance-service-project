@@ -42,6 +42,7 @@ export const getElapse = (params = { dotNum: 6,xAxisTimeFormat:'YYYY-MM-dd HH:mm
         params.endTime && formData.append("endTime",params.endTime);
         params.timeNum && formData.append("timeNum",params.timeNum);
         params.streamName && formData.append("streamName",params.streamName);
+        console.log(formData);
         return HTTPUtil.post('/stream/globalview/graph',formData).then((res) => {  
             if(res){
                  res = res.result;

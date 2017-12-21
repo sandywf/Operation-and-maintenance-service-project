@@ -1,5 +1,4 @@
 import React from 'react';
-import { ReactInterval } from 'react-interval';
 import moment from 'moment';
 import Timebar from '../../../components/common/Time';
 import { Table, Icon, Popconfirm,Select,Menu, Dropdown } from 'antd';
@@ -16,16 +15,39 @@ class Unusual extends React.Component {
 		newTime:moment().format('YYYY-MM-DD HH:mm'),
 		all:'unusual'
 	}
-	handleMenuClick =(e)=>{
-		if(parseInt(e.key)=='0'){
-			this.props.getUnusual();this.tick();
-		}else{
-			this.setState({timeName: e.domEvent.currentTarget.innerHTML});
-			this.setState({timeout:parseInt(e.key)});
-		}
+	/*真实的DOM被渲染出来后调用*/
+	componentDidMount(){
+        this.timerFun(60000);
 	}
+	 // 销毁定时器
+	 componentWillUnmount(){
+        this.timer && clearTimeout(this.timer);
+    }
+    // 定时器的时间选择
+    handleMenuClick =(e)=>{
+        if(parseInt(e.key)=='0'){
+            this.setTime();
+            this.timerFun(60000);
+        }else{
+            this.setState({timeout:parseInt(e.key)});
+            this.setState({timeName: e.domEvent.currentTarget.innerHTML});
+            this.timerFun(parseInt(e.key));
+        }
+    }
+    // 定时器方法
+    timerFun=(time)=>{
+        this.timer && clearTimeout(this.timer);
+        this.timer = setInterval(() => {
+            this.setTime();
+        }, time)
+    }
+    // 定时器回调
+    setTime=()=>{
+		this.props.getUnusual();
+		this.tick();
+    }
 	tick() {
-			this.setState({newTime:moment().format('YYYY-MM-DD HH:mm')});
+		this.setState({newTime:moment().format('YYYY-MM-DD HH:mm')});
 	}
 	jumpDmc=(link,dmc)=>{
 		appHistory.push({
@@ -68,7 +90,6 @@ class Unusual extends React.Component {
 		  }];
   	return (
   		<div className="ms-abnormal fl linear">
-			<ReactInterval timeout={this.state.timeout} enabled={true} callback={()=>{this.props.getUnusual();this.tick();}} />
      	 	<Timebar ref="getTime" all ={this.state.all} handleMenuClick={this.handleMenuClick} timeName={this.state.timeName} newTime={this.state.newTime}/>
 			<Table className="ms-data-table" rowkey={(record,key)=>key} dataSource={this.props.unsualData} columns={columns} onChange={this.props.handleChange} pagination={pagination} />
 		</div>

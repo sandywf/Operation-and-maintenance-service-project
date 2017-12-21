@@ -1,5 +1,4 @@
 import React from 'react';
-import { ReactInterval } from 'react-interval';
 import moment from 'moment';
 import { Table,Input,Button,Select } from 'antd';
 import Search from './Search';
@@ -35,6 +34,7 @@ class Counter extends React.Component {
         if(!this.props.location.search){
             this.props.getKHData();
         }
+        this.timerFun(60000);
     }
     /*组件接收到新的props时调用*/
     componentWillReceiveProps(nextProps){ 
@@ -42,13 +42,32 @@ class Counter extends React.Component {
             this.setState({data:nextProps.data});
           }    
     }
+     // 销毁定时器
+     componentWillUnmount(){
+        this.timer && clearTimeout(this.timer);
+    }
+    // 定时器的时间选择
     handleMenuClick =(e)=>{
         if(parseInt(e.key)=='0'){
-			this.handleChange();this.tick();
-		}else{
-			this.setState({timeName: e.domEvent.currentTarget.innerHTML});
-			this.setState({timeout:parseInt(e.key)});
-		}
+            this.setTime();
+            this.timerFun(60000);
+        }else{
+            this.setState({timeout:parseInt(e.key)});
+            this.setState({timeName: e.domEvent.currentTarget.innerHTML});
+            this.timerFun(parseInt(e.key));
+        }
+    }
+    // 定时器方法
+    timerFun=(time)=>{
+        this.timer && clearTimeout(this.timer);
+        this.timer = setInterval(() => {
+            this.setTime();
+        }, time)
+    }
+    // 定时器回调
+    setTime=()=>{
+        this.handleChange();
+        this.tick();
     }
     tick() {
         this.setState({newTime:moment().format('YYYY-MM-DD HH:mm')});
@@ -137,8 +156,8 @@ class Counter extends React.Component {
             title: '客户端',
             dataIndex: 'subscriptionId',
             key: 'subscriptionId',
-            width: 200,
-            render:(text)=><span title={text} className="ellips width200">{text}</span>,
+            width: 150,
+            render:(text)=><span title={text}>{text}</span>,
             sorter:true,
             sortOrder: sortedInfo.columnKey === 'subscriptionId' && sortedInfo.order,
         },
@@ -146,8 +165,8 @@ class Counter extends React.Component {
             title: 'DMC名称',
             dataIndex: 'dmcName',
             key: 'dmcName',
-            width: 200,
-            render: (text,record) => <a href="javascript:;" title={text} className="ellips width200" onClick={()=>this.jumpDmc('dmc',record.dmcName)}>{text}</a>,
+            width: 150,
+            render: (text,record) => <a href="javascript:;" title={text} className="ellips" onClick={()=>this.jumpDmc('dmc',record.dmcName)}>{text}</a>,
             sorter:true,
             sortOrder: sortedInfo.columnKey === 'dmcTag' && sortedInfo.order,
             filteredValue: filteredInfo.dmcTag || '',
@@ -155,8 +174,8 @@ class Counter extends React.Component {
             title: 'DMS名称',
             dataIndex: 'dmsName',
             key: 'dmsName',
-            width: 200,
-             render: (text,record) => <a href="javascript:;" title={text} className="ellips width200" onClick={()=>this.jumpDms('dms',record.dmsName)}>{text}</a>,
+            width: 150,
+             render: (text,record) => <a href="javascript:;" title={text} className="ellips" onClick={()=>this.jumpDms('dms',record.dmsName)}>{text}</a>,
             sorter:true,
             sortOrder: sortedInfo.columnKey === 'dmsTag' && sortedInfo.order,
         },{
@@ -164,7 +183,7 @@ class Counter extends React.Component {
             width: 200,
             dataIndex: 'streamName',
             key: 'streamName',
-            render: (text,record) => <a href="javascript:;" title={text} className="ellips width200" onClick={()=>this.jumpFlow('flow',record.streamName)}>{text}</a>,
+            render: (text,record) => <a href="javascript:;" title={text} className="ellips" onClick={()=>this.jumpFlow('flow',record.streamName)}>{text}</a>,
             sorter:true,
             sortOrder: sortedInfo.columnKey === 'streamName' && sortedInfo.order,
             filteredValue: filteredInfo.streamName || '',
@@ -173,7 +192,7 @@ class Counter extends React.Component {
             dataIndex: 'ip',
             key: 'ip',
             width: 150,
-            render: (text,record) => <a href="javascript:;" title={text} className="ellips width150" onClick={()=>this.jumpIp('independentIp',record.ip)}>{text}</a>,
+            render: (text,record) => <a href="javascript:;" title={text} className="ellips" onClick={()=>this.jumpIp('independentIp',record.ip)}>{text}</a>,
             sorter:true,
             sortOrder: sortedInfo.columnKey === 'ip' && sortedInfo.order,
             filteredValue: filteredInfo.ip || '',
@@ -182,7 +201,7 @@ class Counter extends React.Component {
             width:130,
             dataIndex: 'streamStartTime',
             key: 'streamStartTime',
-            render:(text)=><span title={text} className="ellips width130">{text}</span>,
+            render:(text)=><span title={text}>{text}</span>,
             sorter:true,
             sortOrder: sortedInfo.columnKey === 'streamStartTime' && sortedInfo.order,
         },{
@@ -190,7 +209,7 @@ class Counter extends React.Component {
             width:140,
             dataIndex: 'clientStartTime',
             key: 'clientStartTime',
-            render:(text)=><span title={text} className="ellips width140">{text}</span>,
+            render:(text)=><span title={text}>{text}</span>,
             sorter:true,
             sortOrder: sortedInfo.columnKey === 'clientStartTime' && sortedInfo.order,
         },{
@@ -200,7 +219,7 @@ class Counter extends React.Component {
                 width:80,
                 dataIndex: 'resolution',
                 key: 'resolution',
-                render:(text)=><span title={text} className="ellips width80">{text}</span>,
+                render:(text)=><span title={text}>{text}</span>,
                 sorter:true,
                 sortOrder: sortedInfo.columnKey === 'resolution' && sortedInfo.order,
             }, {
@@ -208,7 +227,7 @@ class Counter extends React.Component {
                 width:50,
                 dataIndex: 'frameRate',
                 key: 'frameRate',
-                render:(text)=><span title={text} className="ellips width50">{text}</span>,
+                render:(text)=><span title={text}>{text}</span>,
                 sorter:true,
                 sortOrder: sortedInfo.columnKey === 'frameRate' && sortedInfo.order,
             }], 
@@ -219,7 +238,7 @@ class Counter extends React.Component {
             width:90,
             dataIndex: 'subscriptionBps',
             key: 'subscriptionBps',
-            render:(text)=><span title={text} className="ellips width90">{text}</span>,
+            render:(text)=><span title={text}>{text}</span>,
             sorter:true,
             sortOrder: sortedInfo.columnKey === 'subscriptionBps' && sortedInfo.order,
         },{
@@ -227,7 +246,7 @@ class Counter extends React.Component {
             dataIndex: 'areaName',
             key: 'areaName',
             width:90,
-            render:(text)=><span title={text} className="ellips width90">{text}</span>,
+            render:(text)=><span title={text}>{text}</span>,
             sorter:true,
             sortOrder: sortedInfo.columnKey === 'areaName' && sortedInfo.order,
         },{
@@ -235,7 +254,7 @@ class Counter extends React.Component {
             width:64,
             dataIndex: 'subscriptionDropRate',
             key: 'subscriptionDropRate',
-            render:(text)=><span title={text} className="ellips width60">{text}</span>,
+            render:(text)=><span title={text}>{text}</span>,
             sorter:true,
             sortOrder: sortedInfo.columnKey === 'subscriptionDropRate' && sortedInfo.order,
         }], 
@@ -244,7 +263,6 @@ class Counter extends React.Component {
             <div id="zen">
                 <Topone title={this.state.titleName} name={this.state.name} />
                 <Search valSearch={this.valSearch.bind(this)} dmcTag={(this.props.location.query.dmcTag) ? this.props.location.query.dmcTag :''} dmsTag={(this.props.location.query.dmsTag) ? this.props.location.query.dmsTag :''} ip={(this.props.location.query.ip) ? this.props.location.query.ip :''} streamName={(this.props.location.query.streamName) ? this.props.location.query.streamName :''} />
-                <ReactInterval timeout={this.state.timeout} enabled={true} callback={()=>{this.handleChange();this.tick();}} />
                 <Timebar itemNum={(pageDatas) ? pageDatas : 0} ref="getTime" handleMenuClick={this.handleMenuClick} timeName={this.state.timeName} newTime={this.state.newTime}/>
                 <Table rowKey={(record,key) => key} columns={columns} dataSource={this.state.data} onChange={this.handleChange} pagination={pagination} />
             </div>
